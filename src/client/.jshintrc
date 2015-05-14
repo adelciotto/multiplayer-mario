@@ -1,0 +1,6 @@
+{
+  "maxerr": 50,
+  "esnext": true,
+  "node": false,
+  "browserify": true
+}
