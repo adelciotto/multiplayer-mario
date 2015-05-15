@@ -11,7 +11,7 @@ require('./polyfills');
 import BootState from 'client/states/boot';
 import PreloadState from 'client/states/preload';
 import SplashState from 'client/states/splash';
-import MenuState from 'client/states/menu';
+import MainMenuState from 'client/states/main_menu';
 import PlayState from 'client/states/play';
 import TestLevel from 'client/levels/test_level';
 
@@ -59,7 +59,7 @@ window.onload = () => {
     game.state.add('boot', BootState, true);
     game.state.add('preload', PreloadState, false);
     game.state.add('splash', SplashState, false);
-    game.state.add('menu', MenuState, false);
+    game.state.add('mainmenu', MainMenuState, false);
     game.state.add('play', PlayState, false);
     game.state.add('testlevel', TestLevel, false);
 };

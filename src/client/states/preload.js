@@ -27,6 +27,9 @@ class PreloadState extends State {
         this.load.image('phaser', 'res/img/phaser.png');
         this.load.image('title', 'res/img/title.png');
 
+        this.load.bitmapFont('carrier_command', 'res/fonts/carrier_command.png',
+            'res/fonts/carrier_command.xml');
+
         this.load.audio('bump', 'res/sounds/smb_bump.wav');
         this.load.audio('jump', 'res/sounds/smb_jump-small.wav');
         this.load.audio('pause', 'res/sounds/smb_pause.wav');

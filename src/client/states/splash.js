@@ -28,7 +28,7 @@ class SplashState extends State {
     _createHtmlTween() {
         var htmlTween = this.add.tween(this._htmlLogo).to({alpha: 1}, 1000,
             Phaser.Easing.Cubic.In, true, 0, 0, true);
-        htmlTween.onComplete.add(() => { this.state.start('play'); });
+        htmlTween.onComplete.add(() => { this.state.start('mainmenu'); });
     }
 }
 
