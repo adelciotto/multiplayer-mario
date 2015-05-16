@@ -17,7 +17,7 @@ import TestLevel from 'client/levels/test_level';
 
 class Game extends Phaser.Game {
     constructor() {
-        super(256, 224, Phaser.AUTO, 'game', false, false);
+        super(400, 240, Phaser.AUTO, 'game', false, false);
     }
 
     boot() {

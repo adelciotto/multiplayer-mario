@@ -21,4 +21,8 @@ module.exports = {
     PLAYER_DRAG: 165,
     PLAYER_JUMP_SPEED: -385.0,
 
+    /**
+     * size constants
+     */
+    BLOCK_SIZE: 16
 };

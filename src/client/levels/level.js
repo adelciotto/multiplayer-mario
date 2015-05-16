@@ -8,6 +8,7 @@
 
 import State from 'client/states/state';
 import Block from 'client/entities/block';
+import Const from 'common/const';
 
 class Level extends State {
     constructor(game, gravity) {
