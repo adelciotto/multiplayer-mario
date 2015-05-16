@@ -15,36 +15,35 @@ import errorHandler from 'errorhandler';
 import path from 'path';
 import http from 'http';
 import * as routes from './routes';
-import socketio from 'socket.io';
 
-class Server {
+class ExpressServer {
     constructor() {
         this.app = express();
-        console.log(routes);
+        this.server = null;
 
-        this._server = null;
-        this._initExpress();
+        this._configureExpress();
     }
 
     listen(port = 8000) {
         this.port = process.env.PORT || port;
 
         // create the HTTP Server and start listening.
-        this._server = http.createServer(this.app);
-        this._server.listen(port, () => {
+        this.server = http.createServer(this.app);
+        this.server.listen(port, () => {
           console.log('Express server listening on port: ' + port);
         });
+
+        return this;
     }
 
-    _initExpress() {
+    _configureExpress() {
         this.app.use(bodyParser());
         this.app.use(methodOverride());
         this.app.use(cookieParser('your secret here'));
         this.app.use(session());
         this.app.use(express.static(path.join(__dirname, '../../dist')));
 
-        // url routing
-        this.app.get('/', routes.index);
+        this._configureRoutes();
 
         // enable development mode by default to aid with debugging.
         var env = process.env.NODE_ENV || 'development';
@@ -52,7 +51,11 @@ class Server {
           this.app.use(errorHandler());
         }
     }
+
+    _configureRoutes() {
+        this.app.get('/', routes.index);
+    }
 }
 
-export default Server;
+export default ExpressServer;
 

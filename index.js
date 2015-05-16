@@ -9,5 +9,6 @@
 // enable es6 features using babel
 require('babel/register');
 
-var Server = require('./src/server/server');
-var server = new Server().listen();
+var ServerGameManager = require('./src/server/server_game_manager');
+
+var gameServer = new ServerGameManager();

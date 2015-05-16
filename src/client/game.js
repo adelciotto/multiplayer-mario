@@ -51,15 +51,16 @@ class Game extends Phaser.Game {
         this.add.plugin(Phaser.Plugin.Debug);
     }
 
+    start() {
+        this.state.add('boot', BootState, true);
+        this.state.add('preload', PreloadState, false);
+        this.state.add('splash', SplashState, false);
+        this.state.add('mainmenu', MainMenuState, false);
+        this.state.add('play', PlayState, false);
+        this.state.add('testlevel', TestLevel, false);
+
+        return this;
+    }
 }
 
-window.onload = () => {
-    var game = new Game();
-
-    game.state.add('boot', BootState, true);
-    game.state.add('preload', PreloadState, false);
-    game.state.add('splash', SplashState, false);
-    game.state.add('mainmenu', MainMenuState, false);
-    game.state.add('play', PlayState, false);
-    game.state.add('testlevel', TestLevel, false);
-};
+export default Game;
