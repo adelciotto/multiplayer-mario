@@ -29,6 +29,10 @@ Then point your browser to [http://localhost:3000](http://localhost:3000).
 
 ![preview](http://imgur.com/NiIKvWc.gif)
 
+![title screen](http://imgur.com/gt07GJ3.png)
+
+![multiplayer waiting room](http://imgur.com/SyUw4u4.png)
+
 ### License and Legal
 
 This code-base is released under the [MIT License](http://opensource.org/licenses/MIT).
