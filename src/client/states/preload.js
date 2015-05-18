@@ -26,6 +26,7 @@ class PreloadState extends State {
         this.load.image('html', 'res/img/html.png');
         this.load.image('phaser', 'res/img/phaser.png');
         this.load.image('title', 'res/img/title.png');
+        this.load.image('dialog', 'res/img/dialog.png');
 
         this.load.bitmapFont('carrier_command', 'res/fonts/carrier_command.png',
             'res/fonts/carrier_command.xml');
@@ -38,8 +39,7 @@ class PreloadState extends State {
     create() {
         super.create();
 
-        this.state.start('play');
-        //this.state.start('splash');
+        this.state.start('splash');
     }
 }
 

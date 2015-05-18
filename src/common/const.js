@@ -27,6 +27,16 @@ module.exports = {
     BLOCK_SIZE: 16,
 
     /**
+     * in game text strings
+     */
+    MULTIPLAYER_DIALOG_WELCOME: 'Welcome to multiplayer mode',
+    MULTIPLAYER_DIALOG_MSG: [
+        'This is the waiting room.',
+        'Feel free to jump around.',
+    ].join('\n\n'),
+    MULTIPLAYER_DIALOG_CLOSE: 'Ok I get it!',
+
+    /**
      * networking constants
      */
     SocketEvents: {

@@ -10,6 +10,8 @@ import State from 'client/states/state';
 import Block from 'client/entities/block';
 import Player from 'client/entities/player';
 import Network from 'client/network';
+import Dialog from 'client/gui/dialog';
+import Const from 'common/const';
 import * as util from 'common/util/util';
 
 class Level extends State {
@@ -46,9 +48,6 @@ class Level extends State {
     create() {
         super.create();
 
-        this._connectionStatusText = this.add.bitmapText(16, 16, 'carrier_command',
-            '', 10);
-        this._connectionStatusText.fixedToCamera = true;
 
         // create a local player
         this._localPlayer = new Player(this.game, 32, 0);
@@ -80,6 +79,8 @@ class Level extends State {
         if (this.game.inMultiplayerMode) {
             this.physics.arcade.collide(this._localPlayer, this._remotePlayers);
             this.physics.arcade.collide(this._remotePlayers, this._collisionLayer);
+
+            this._remotePlayers.callAll('update');
         }
 
         this._blocks.callAll('update');
@@ -126,7 +127,11 @@ class Level extends State {
 
     _initNetwork() {
         this.network = new Network();
-        this._connectionStatusText.setText('connecting...');
+
+        this._connectionStatusText = this.add.bitmapText(16, 16, 'carrier_command',
+            'connecting', 10);
+        this._connectionStatusText.fixedToCamera = true;
+
         this._remotePlayers = this.add.group();
 
         this.network.onConnect.add(this._onConnect, this);
@@ -144,6 +149,7 @@ class Level extends State {
         });
 
         this._connectionStatusText.setText('connected');
+        this._welcomeDialog = new Dialog(this, Const.MULTIPLAYER_DIALOG_WELCOME, Const.MULTIPLAYER_DIALOG_MSG);
         window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
     }
 
@@ -154,6 +160,8 @@ class Level extends State {
 
     _onNewPlayer(data) {
         console.log(`player: ${data.id} connected`);
+        this._connectionStatusText.setText('player joined');
+        window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
 
         var newPlayer = new Player(this.game, data.x, data.y, data.id);
         newPlayer.setup(this);
