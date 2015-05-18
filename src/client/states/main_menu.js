@@ -29,6 +29,7 @@ class MainMenuState extends Menu {
 
     _multiPlayerSelected() {
         this.game.inMultiplayerMode = true;
+        this.game.stage.disableVisibilityChange = true;
         this.state.start('play');
     }
 
