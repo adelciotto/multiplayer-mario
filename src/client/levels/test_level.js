@@ -20,14 +20,6 @@ class TestLevel extends Level {
         super.create();
 
         this.stage.backgroundColor = Const.SKY_BLUE;
-        this.game.add.existing(this.game.player);
-        this.game.player.setup(this);
-    }
-
-    update() {
-        super.update();
-
-        this.game.player.update();
     }
 }
 

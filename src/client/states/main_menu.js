@@ -28,7 +28,8 @@ class MainMenuState extends Menu {
     }
 
     _multiPlayerSelected() {
-
+        this.game.inMultiplayerMode = true;
+        this.state.start('play');
     }
 
     _creditsSelected() {

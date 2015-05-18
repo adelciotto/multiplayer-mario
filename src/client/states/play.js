@@ -20,8 +20,8 @@ class PlayState extends State {
         this.game.pauseSound = this.game.add.audio('pause');
         this.game.bumpSound = this.game.add.audio('bump');
         this.game.jumpSound = this.game.add.audio('jump');
-        this.game.player = new Player(this.game);
 
+        this.game.inMultiplayerMode = true;
         this.state.start('testlevel');
     }
 }

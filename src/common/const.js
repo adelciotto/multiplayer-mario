@@ -24,5 +24,14 @@ module.exports = {
     /**
      * size constants
      */
-    BLOCK_SIZE: 16
+    BLOCK_SIZE: 16,
+
+    /**
+     * networking constants
+     */
+    SocketEvents: {
+        SERVER_INIT: 'serverinit',
+        CLIENT_INIT: 'clientinit',
+        DISCONNECT: 'disconnect'
+    }
 };

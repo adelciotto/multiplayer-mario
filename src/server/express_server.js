@@ -1,6 +1,6 @@
 /*
  * ===========================================================================
- * File: server.js
+ * File: express_server.js
  * Author: Anthony Del Ciotto
  * Desc: TODO
  * ===========================================================================
@@ -18,22 +18,23 @@ import * as routes from './routes';
 
 class ExpressServer {
     constructor() {
-        this.app = express();
+        this.port = 0;
+        this.app = null;
         this.server = null;
-
-        this._configureExpress();
     }
 
-    listen(port = 8000) {
-        this.port = process.env.PORT || port;
+    listen(httpPort = 3000) {
+        this.port = process.env.PORT || httpPort;
+
+        // create and configure express
+        this.app = express();
+        this._configureExpress();
 
         // create the HTTP Server and start listening.
         this.server = http.createServer(this.app);
-        this.server.listen(port, () => {
-          console.log('Express server listening on port: ' + port);
+        this.server.listen(this.port, () => {
+          console.log('Express server listening on port: ' + this.port);
         });
-
-        return this;
     }
 
     _configureExpress() {

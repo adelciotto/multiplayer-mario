@@ -18,12 +18,14 @@ let PlayerStates = {
 };
 
 class Player extends Entity {
-    constructor(game, x, y) {
+    constructor(game, x, y, id = 0) {
         super(game, x, y, 'playersheet', 0, Const.PLAYER_ACCEL);
 
+        this.id = id;
         this.maxSpeed = Const.PLAYER_MAX_SPEED;
         this.currentState = PlayerStates.IDLE;
         this.jumpReleased = true;
+        this.facing = Phaser.RIGHT;
 
         this._jumping = false;
         this._grounded = false;
@@ -64,7 +66,7 @@ class Player extends Entity {
 
         // check if we are turning sharply
         if (this._grounded) {
-            if ( (this.body.velocity.x < -Const.PLAYER_MAX_SPEED/2 && this.body.acceleration.x > 0) ||
+            if ( (this.body.velocity.x < -(Const.PLAYER_MAX_SPEED/2) && this.body.acceleration.x > 0) ||
                  (this.body.velocity.x > Const.PLAYER_MAX_SPEED/2 && this.body.acceleration.x < 0) ) {
                 this._turning = true;
                 this.currentState = PlayerStates.Turning;

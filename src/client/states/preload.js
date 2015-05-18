@@ -38,7 +38,8 @@ class PreloadState extends State {
     create() {
         super.create();
 
-        this.state.start('splash');
+        this.state.start('play');
+        //this.state.start('splash');
     }
 }
 

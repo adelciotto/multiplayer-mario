@@ -1,14 +1,18 @@
 /*
  * ===========================================================================
- * File: app.js
+ * File: prompt.js
  * Author: Anthony Del Ciotto
  * Desc: TODO
  * ===========================================================================
  */
 
-// enable es6 features using babel
-require('babel/register');
+class Dialog {
+    constructor(level, title, msg) {
+        this.title = title;
+        this.msg = msg;
+    }
 
-var ServerGameManager = require('./src/server/server_game_manager');
+    _setupBackgroundBox() {
 
-var gameServer = new ServerGameManager();
+    }
+}

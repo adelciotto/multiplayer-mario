@@ -1,6 +1,6 @@
 /*
  * ===========================================================================
- * File: utils.js
+ * File: util.js
  * Author: Anthony Del Ciotto
  * Desc: TODO
  * ===========================================================================
@@ -22,3 +22,12 @@ export function hasFunction(obj, fn) {
     return (obj !== null) && (typeof obj[fn] === 'function');
 }
 
+export function searchObjArray(arr, prop, val) {
+    for (var i = 0, l = arr.length; i < l; i++) {
+        let item = arr[i];
+
+        if (item[prop] === val) {
+            return item;
+        }
+    }
+}
