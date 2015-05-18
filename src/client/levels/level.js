@@ -48,7 +48,6 @@ class Level extends State {
     create() {
         super.create();
 
-
         // create a local player
         this._localPlayer = new Player(this.game, 32, 0);
         this._localPlayer.setup(this);
@@ -177,7 +176,6 @@ class Level extends State {
         }
 
         removePlayer.destroy();
-        //this._remotePlayers.removeChild(removePlayer);
     }
 
     _handleKeyboard(key, active) {
@@ -185,6 +183,11 @@ class Level extends State {
             // JUMP
             case this._keymap.keyboard.jump:
                 this._localPlayer.jump();
+                break;
+
+            // SPRINT
+            case this._keymap.keyboard.sprint:
+                this._localPlayer.sprint(active);
                 break;
 
             // DOWN i.e ducking

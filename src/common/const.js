@@ -17,9 +17,11 @@ module.exports = {
      */
     NORMAL_GRAVITY: 960.0,
     PLAYER_MAX_SPEED: 120.0,
+    PLAYER_MAX_SPRINT_SPEED: 180.0,
     PLAYER_ACCEL: 182.0,
     PLAYER_DRAG: 165,
     PLAYER_JUMP_SPEED: -385.0,
+    PLAYER_MAX_FALL_SPEED: 320,
 
     /**
      * size constants
