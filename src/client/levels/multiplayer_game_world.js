@@ -10,8 +10,8 @@ import GameWorld from 'client/levels/game_world';
 import Player from 'client/entities/player';
 import Const from 'common/const';
 import MsgDialog from 'client/gui/msg_dialog';
+import TextLabel from 'client/gui/text_label';
 import Network from 'client/network';
-import * as GuiUtils from 'client/gui/utils';
 import * as util from 'common/util/util';
 
 class MultiplayerGameWorld extends GameWorld {
@@ -28,8 +28,8 @@ class MultiplayerGameWorld extends GameWorld {
     _createWorld() {
         this.network = new Network();
 
-        this._connectionStatusText = GuiUtils.createTextLabel(this._level.game, 'connecting',
-            16, 16, false, 'left', 10);
+        this._connectionStatusText = new TextLabel(this._level.game, 16, 16,
+            'connecting...', false, 'left', 10);
         this._level.add.existing(this._connectionStatusText);
         this.remotePlayers = this._level.add.group();
 
@@ -56,7 +56,8 @@ class MultiplayerGameWorld extends GameWorld {
         });
 
         this._connectionStatusText.setText('connected');
-        this._welcomeDialog = new MsgDialog(this._level, Const.MULTIPLAYER_DIALOG_WELCOME, Const.MULTIPLAYER_DIALOG_MSG);
+        this._welcomeDialog = new MsgDialog(this._level, Const.MULTIPLAYER_DIALOG_TITLE,
+            Const.MULTIPLAYER_DIALOG_MSG);
         window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
     }
 

@@ -8,7 +8,7 @@
 
 import State from 'client/states/state';
 import Const from 'common/const';
-import * as GuiUtils from 'client/gui/utils';
+import TextButton from 'client/gui/text_button';
 
 const Step = Math.PI * 2 / 360 ;
 
@@ -43,8 +43,8 @@ class MenuState extends State {
         for (var i = 0, l = items.length; i < l; i++) {
             let item = items[i];
 
-            let textButton = GuiUtils.createTextButton(this.game, item.text, this.world.centerX, yPos,
-                { fn: item.onInputDown, ctx: this }, true, 'center', 12);
+            let textButton = new TextButton(this.game, this.world.centerX, yPos,
+                item.text, { fn: item.onInputDown, ctx: this }, true, 'center', 12);
             this.add.existing(textButton);
 
             yPos += textButton.height * 2;

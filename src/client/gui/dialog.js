@@ -6,16 +6,18 @@
  * ===========================================================================
  */
 
-import * as GuiUtils from 'client/gui/utils';
+import TextLabel from 'client/gui/text_label';
+import TextButton from 'client/gui/text_button';
 
 class Dialog {
-    constructor(level, titleText, closeText = 'Close') {
+    constructor(level, titleText, closeText = 'Close', onCloseCallback = () => {}) {
         this.titleText = titleText;
         this.closeText = closeText;
 
         this._level = level;
         this._dialogSprite = null;
         this._dialogGroup = null;
+        this._onCloseCallback = onCloseCallback;
         this._setupBackgroundBox();
     }
 
@@ -36,7 +38,7 @@ class Dialog {
         var centerX = this._dialogSprite.x;
         var centerY = this._dialogSprite.y;
 
-        tween.to({x: 1.5, y: 1.5}, 1000, Phaser.Easing.Sinusoidal.Out, true);
+        tween.to({x: 1.8, y: 1.5}, 1000, Phaser.Easing.Sinusoidal.Out, true);
         tween.onComplete.add(() => { this._setupText(centerX, centerY); }, this);
     }
 
@@ -45,14 +47,17 @@ class Dialog {
 
         var tween = this._level.add.tween(this._dialogSprite.scale);
         tween.to({x: 0, y: 0}, 1000, Phaser.Easing.Sinusoidal.Out, true);
-        tween.onComplete.add(() => { this._dialogSprite.destroy(); });
+        tween.onComplete.add(() => {
+            this._dialogSprite.destroy();
+            this._onCloseCallback();
+        });
     }
 
     _setupText(centerX, centerY) {
-        var titleLabel = GuiUtils.createTextLabel(this._level.game, this.titleText, centerX,
-            centerY - this._dialogSprite.height * 0.33, true);
-        var closeButton = GuiUtils.createTextButton(this._level.game, this.closeText, centerX,
-            centerY + this._dialogSprite.height * 0.33, { fn: this._setupClosingTween, ctx: this }, true);
+        var titleLabel = new TextLabel(this._level.game, centerX,
+            centerY - this._dialogSprite.height * 0.4, this.titleText, true);
+        var closeButton = new TextButton(this._level.game, centerX,
+            centerY + this._dialogSprite.height * 0.4, this.closeText, { fn: this._setupClosingTween, ctx: this }, true);
         this._dialogGroup.addMultiple([titleLabel, closeButton]);
     }
 }

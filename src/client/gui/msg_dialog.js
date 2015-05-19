@@ -7,11 +7,11 @@
  */
 
 import Dialog from 'client/gui/dialog';
-import * as GuiUtils from 'client/gui/utils';
+import TextLabel from 'client/gui/text_label';
 
 class MsgDialog extends Dialog {
-    constructor(level, titleText, msgText, closeText) {
-        super(level, titleText, closeText);
+    constructor(level, titleText, msgText, closeText, onCloseCallback) {
+        super(level, titleText, closeText, onCloseCallback);
 
         this.msgText = msgText;
     }
@@ -19,8 +19,8 @@ class MsgDialog extends Dialog {
     _setupText(centerX, centerY) {
         super._setupText(centerX, centerY);
 
-        var msgLabel = GuiUtils.createTextLabel(this._level.game, this.msgText, centerX,
-            centerY, true, 'center');
+        var msgLabel = new TextLabel(this._level.game, centerX,
+            centerY, this.msgText, true, 'center');
         this._dialogGroup.add(msgLabel);
     }
 }

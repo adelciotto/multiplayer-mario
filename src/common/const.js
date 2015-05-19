@@ -37,10 +37,18 @@ module.exports = {
     /**
      * in game text strings
      */
-    MULTIPLAYER_DIALOG_WELCOME: 'Welcome to multiplayer mode',
+    MAINMENU_DIALOG_TITLE: 'Mult-player Mario',
+    MAINMENU_DIALOG_MSG: [
+        'This is a very early alpha.',
+        'Most images, logos, characters',
+        'dialog, plot, and other assets',
+        'taken from the original Super Mario',
+        'Bros are copyrights of Nintendo.'
+    ].join('\n\n'),
+    MULTIPLAYER_DIALOG_TITLE: 'Welcome to multiplayer mode',
     MULTIPLAYER_DIALOG_MSG: [
         'This is the waiting room.',
-        'Feel free to jump around.',
+        'Feel free to jump around.'
     ].join('\n\n'),
     MULTIPLAYER_DIALOG_CLOSE: 'Ok I get it!',
 
