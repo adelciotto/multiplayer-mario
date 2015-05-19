@@ -7,12 +7,9 @@
  */
 
 import State from 'client/states/state';
-import Block from 'client/entities/block';
-import Player from 'client/entities/player';
-import Network from 'client/network';
-import Dialog from 'client/gui/dialog';
 import Const from 'common/const';
-import * as util from 'common/util/util';
+import GameWorld from 'client/levels/game_world';
+import MultiplayerGameWorld from 'client/levels/multiplayer_game_world';
 
 class Level extends State {
     constructor(game, gravity) {
@@ -20,12 +17,9 @@ class Level extends State {
 
         this.gravity = gravity;
         this.mapKey = '';
+        this.gameWorld = null;
 
         this._localPlayer = null;
-        this._remotePlayers = null;
-        this._collisionLayer = null;
-        this._staticLayer = null;
-
         this._keymap = {
             keyboard: {
                 down: Phaser.Keyboard.DOWN,
@@ -48,42 +42,25 @@ class Level extends State {
     create() {
         super.create();
 
-        // create a local player
-        this._localPlayer = new Player(this.game, 32, 0);
-        this._localPlayer.setup(this);
-        this.add.existing(this._localPlayer);
-
         // if we are in a multiplayer game, connect to server
         if (this.game.inMultiplayerMode) {
-            this._initNetwork();
+            this.gameWorld = new MultiplayerGameWorld(this);
         } else {
-            this._createLevel();
+            this.gameWorld = new GameWorld(this);
         }
 
-        this.camera.follow(this._localPlayer, Phaser.FOLLOW_PLATFORMER);
-        this.physics.arcade.gravity.y = this.gravity;
+        this.gameWorld.create();
+        this._localPlayer = this.gameWorld.localPlayer;
     }
 
     shutdown() {
         super.shutdown();
 
-        this.camera.unfollow();
+        this.gameWorld.shutdown();
     }
 
     update() {
-        this.physics.arcade.collide(this._localPlayer, this._collisionLayer);
-        this.physics.arcade.collide(this._localPlayer, this._blocks, this._onBlockBump,
-                                    null, this);
-
-        if (this.game.inMultiplayerMode) {
-            this.physics.arcade.collide(this._localPlayer, this._remotePlayers);
-            this.physics.arcade.collide(this._remotePlayers, this._collisionLayer);
-
-            this._remotePlayers.callAll('update');
-        }
-
-        this._blocks.callAll('update');
-        this._localPlayer.update();
+        this.gameWorld.update();
     }
 
     onKeyboardDown(event) {
@@ -97,85 +74,6 @@ class Level extends State {
 
         this._handleKeyboard(event.keyCode, false);
         this._handleKeyboardUp(event.keyCode);
-    }
-
-    _createLevel() {
-        this._createMap();
-        this._createMapObjects();
-    }
-
-    _createMap() {
-        this.map = this.add.tilemap(this.mapKey);
-        this.map.addTilesetImage('tiles', 'tiles');
-
-        this._collisionLayer = this.map.createLayer('collision_layer');
-        this._staticLayer = this.map.createLayer('static_layer');
-        this._collisionLayer.resizeWorld();
-
-        this.map.setCollision(475, true, this._collisionLayer);
-    }
-
-    _createMapObjects() {
-        this._blocks = this.add.group();
-        this._itemBlocks = this.add.group();
-
-        this.map.createFromObjects('object_layer', 2, 'tilesheet', 1, true,
-                                    false, this._blocks, Block);
-        this._blocks.callAll('setup', null, this);
-    }
-
-    _initNetwork() {
-        this.network = new Network();
-
-        this._connectionStatusText = this.add.bitmapText(16, 16, 'carrier_command',
-            'connecting', 10);
-        this._connectionStatusText.fixedToCamera = true;
-
-        this._remotePlayers = this.add.group();
-
-        this.network.onConnect.add(this._onConnect, this);
-        this.network.onDisconnect.add(this._onDisconnect, this);
-        this.network.onNewPlayer.add(this._onNewPlayer, this);
-        this.network.onRemovePlayer.add(this._onRemovePlayer, this);
-
-        this._createLevel();
-    }
-
-    _onConnect(data) {
-        this.network.socket.emit('new_player', {
-            x: this._localPlayer.position.x,
-            y: this._localPlayer.position.y
-        });
-
-        this._connectionStatusText.setText('connected');
-        this._welcomeDialog = new Dialog(this, Const.MULTIPLAYER_DIALOG_WELCOME, Const.MULTIPLAYER_DIALOG_MSG);
-        window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
-    }
-
-    _onDisconnect(data) {
-        // TODO: notify the user if they disconnected
-        // we can probz just return to single player here
-    }
-
-    _onNewPlayer(data) {
-        console.log(`player: ${data.id} connected`);
-        this._connectionStatusText.setText('player joined');
-        window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
-
-        var newPlayer = new Player(this.game, data.x, data.y, data.id);
-        newPlayer.setup(this);
-        this._remotePlayers.add(newPlayer);
-    }
-
-    _onRemovePlayer(data) {
-        var removePlayer = util.searchObjArray(this._remotePlayers.children, 'id', data.id);
-
-        if (!removePlayer) {
-            console.log(`Player: ${data.id} not found`);
-            return;
-        }
-
-        removePlayer.destroy();
     }
 
     _handleKeyboard(key, active) {
@@ -216,11 +114,6 @@ class Level extends State {
         }
     }
 
-    _onBlockBump(player, block) {
-        if (player.body.touching.up) {
-            block.bump();
-        }
-    }
 }
 
 export default Level;

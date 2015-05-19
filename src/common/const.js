@@ -11,6 +11,7 @@ module.exports = {
      * color constants
      */
     SKY_BLUE: 0x6D93FC,
+    GOLD: 0xFFD700,
 
     /**
      * physics constants
@@ -22,6 +23,11 @@ module.exports = {
     PLAYER_DRAG: 165,
     PLAYER_JUMP_SPEED: -385.0,
     PLAYER_MAX_FALL_SPEED: 320,
+
+    /**
+     * asset constants
+     */
+    GAME_FONT: 'carrier_command',
 
     /**
      * size constants

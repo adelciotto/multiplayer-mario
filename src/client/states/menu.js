@@ -8,6 +8,7 @@
 
 import State from 'client/states/state';
 import Const from 'common/const';
+import * as GuiUtils from 'client/gui/utils';
 
 const Step = Math.PI * 2 / 360 ;
 
@@ -29,7 +30,8 @@ class MenuState extends State {
     }
 
     update() {
-        var tStep = Math.sin(this._counter) ;
+        var tStep = Math.sin(this._counter);
+
         this._title.y = (this.game.height/4) + tStep * 15 ;
         this._title.rotation += Phaser.Math.degToRad( 0.1 * tStep ) ;
         this._counter += Step ;
@@ -41,16 +43,11 @@ class MenuState extends State {
         for (var i = 0, l = items.length; i < l; i++) {
             let item = items[i];
 
-            let itemText = this.add.bitmapText(this.world.centerX, yPos, 'carrier_command',
-                item.text, 12);
-            itemText.anchor.set(0.5);
-            itemText.inputEnabled = true;
-            itemText.tint = 0xFFFFFF;
-            itemText.events.onInputOver.add(() => { itemText.tint = 0x994E00; });
-            itemText.events.onInputOut.add(() => { itemText.tint = 0xFFFFFF; });
-            itemText.events.onInputDown.add(item.onInputDown, this);
+            let textButton = GuiUtils.createTextButton(this.game, item.text, this.world.centerX, yPos,
+                { fn: item.onInputDown, ctx: this }, true, 'center', 12);
+            this.add.existing(textButton);
 
-            yPos += itemText.height * 2;
+            yPos += textButton.height * 2;
         }
     }
 }

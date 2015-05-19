@@ -1,18 +1,21 @@
 /*
  * ===========================================================================
- * File: prompt.js
+ * File: dialog.js
  * Author: Anthony Del Ciotto
  * Desc: TODO
  * ===========================================================================
  */
 
+import * as GuiUtils from 'client/gui/utils';
+
 class Dialog {
-    constructor(level, title, msg, close = 'Ok') {
-        this.title = title;
-        this.msg = msg;
-        this.close = close;
+    constructor(level, titleText, closeText = 'Close') {
+        this.titleText = titleText;
+        this.closeText = closeText;
 
         this._level = level;
+        this._dialogSprite = null;
+        this._dialogGroup = null;
         this._setupBackgroundBox();
     }
 
@@ -30,8 +33,11 @@ class Dialog {
 
     _setupOpeningTween() {
         var tween = this._level.add.tween(this._dialogSprite.scale);
+        var centerX = this._dialogSprite.x;
+        var centerY = this._dialogSprite.y;
+
         tween.to({x: 1.5, y: 1.5}, 1000, Phaser.Easing.Sinusoidal.Out, true);
-        tween.onComplete.add(this._setupText, this);
+        tween.onComplete.add(() => { this._setupText(centerX, centerY); }, this);
     }
 
     _setupClosingTween() {
@@ -42,30 +48,12 @@ class Dialog {
         tween.onComplete.add(() => { this._dialogSprite.destroy(); });
     }
 
-    _setupTextSprite(text, x, y) {
-        var textObj = new Phaser.BitmapText(this._level.game, x, y,
-            'carrier_command', text, 8);
-
-        textObj.anchor.set(0.5);
-        textObj.fixedToCamera = true;
-        textObj.align = 'center';
-        this._dialogGroup.add(textObj);
-
-        return textObj;
-    }
-
-    _setupText() {
-        var halfW = this._level.game.width/2;
-        var halfH = this._level.game.height/2;
-        var xpos = this._dialogSprite.position.x;
-
-        this._titleText = this._setupTextSprite(this.title, xpos, halfH - this._dialogSprite.height * 0.35);
-        this._msgText = this._setupTextSprite(this.msg, xpos, halfH);
-        this._closeText = this._setupTextSprite(this.close, xpos, halfH + this._dialogSprite.height * 0.35);
-        this._closeText.inputEnabled = true;
-        this._closeText.events.onInputOver.add(() => { this._closeText.tint = 0x994E00; });
-        this._closeText.events.onInputOut.add(() => { this._closeText.tint = 0xFFFFFF; });
-        this._closeText.events.onInputDown.add(this._setupClosingTween, this);
+    _setupText(centerX, centerY) {
+        var titleLabel = GuiUtils.createTextLabel(this._level.game, this.titleText, centerX,
+            centerY - this._dialogSprite.height * 0.33, true);
+        var closeButton = GuiUtils.createTextButton(this._level.game, this.closeText, centerX,
+            centerY + this._dialogSprite.height * 0.33, { fn: this._setupClosingTween, ctx: this }, true);
+        this._dialogGroup.addMultiple([titleLabel, closeButton]);
     }
 }
 
