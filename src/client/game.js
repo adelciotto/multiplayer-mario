@@ -29,7 +29,7 @@ class Game extends Phaser.Game {
         this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
 
-        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.scale.scaleMode = this.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.scale.setScreenSize();
 
         this.renderer.renderSession.roundPixels = true;

@@ -17,11 +17,13 @@ class MenuState extends State {
         super(game);
 
         this._menuItems = [];
+        this._menuItemsGroup = null;
         this._counter = 0;
     }
 
     create() {
         this.stage.backgroundColor = Const.SKY_BLUE;
+        this._menuItemsGroup = this.add.group();
 
         this._title = this.add.sprite(this.world.centerX, this.world.centerY/4, 'title');
         this._title.anchor.set(0.5);
@@ -37,6 +39,10 @@ class MenuState extends State {
         this._counter += Step ;
     }
 
+    _setInputEnabled(enabled) {
+        this._menuItemsGroup.setAll('inputEnabled', enabled);
+    }
+
     _addMenuItems(items) {
         var yPos = this.game.height / 1.75;
 
@@ -45,7 +51,7 @@ class MenuState extends State {
 
             let textButton = new TextButton(this.game, this.world.centerX, yPos,
                 item.text, { fn: item.onInputDown, ctx: this }, true, 'center', 12);
-            this.add.existing(textButton);
+            this._menuItemsGroup.add(textButton);
 
             yPos += textButton.height * 2;
         }

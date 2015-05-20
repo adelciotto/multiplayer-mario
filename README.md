@@ -29,7 +29,7 @@ Then point your browser to [http://localhost:3000](http://localhost:3000).
 
 ![preview](http://imgur.com/NiIKvWc.gif)
 
-![title screen](http://imgur.com/gt07GJ3.png)
+![title screen](http://i.giphy.com/l41lHIgd469s5Tj5C.gif)
 
 ![multiplayer waiting room](http://imgur.com/SyUw4u4.png)
 

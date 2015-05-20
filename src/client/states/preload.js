@@ -39,7 +39,7 @@ class PreloadState extends State {
     create() {
         super.create();
 
-        this.state.start('mainmenu');
+        this.state.start('splash');
     }
 }
 
