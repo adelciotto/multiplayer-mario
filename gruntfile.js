@@ -22,6 +22,9 @@ module.exports = function(grunt) {
                     { expand: true, src: ['index.html'], dest: 'dist/' },
                     { expand: true, src: ['res/**'], dest: 'dist/' },
                     { expand: true, flatten: true,  src: [
+                                            './node_modules/underscore/underscore.js',
+                                            './node_modules/underscore/underscore-min.js',
+                                            './node_modules/underscore/underscore.-min.map',
                                             './node_modules/phaser/build/phaser.js',
                                             './node_modules/phaser/build/phaser.min.js',
                                             './node_modules/phaser/build/phaser.map',
@@ -50,21 +53,6 @@ module.exports = function(grunt) {
                 files: {
                     'dist/js/bundle.js': ['src/client/**/*.js']
                 }
-            },
-
-            karma: {
-                dest: 'tests/dist/specs.bundle.js',
-                src: 'tests/src/**/*.js',
-                options: {
-                    debug: true,
-                    multifile: true
-                }
-            }
-        },
-
-        karma: {
-            unit: {
-                configFile: 'tests/karma.conf.js'
             }
         },
 
@@ -94,7 +82,6 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('test', ['browserify:karma', 'karma']);
     grunt.registerTask('lint', ['jshint']);
     grunt.registerTask('build', ['clean', 'copy', 'lint', 'browserify:dist']);
     grunt.registerTask('default', ['build', 'express', 'watch']);

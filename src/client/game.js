@@ -6,7 +6,6 @@
  * ===========================================================================
  */
 
-require('./polyfills');
 
 import BootState from 'client/states/boot';
 import PreloadState from 'client/states/preload';

@@ -12,7 +12,6 @@ import Const from 'common/const';
 import MsgDialog from 'client/gui/msg_dialog';
 import TextLabel from 'client/gui/text_label';
 import Network from 'client/network';
-import * as util from 'common/util/util';
 
 class MultiplayerGameWorld extends GameWorld {
     constructor(level) {
@@ -36,7 +35,8 @@ class MultiplayerGameWorld extends GameWorld {
         this.network.onConnect.add(this._onConnect, this);
         this.network.onDisconnect.add(this._onDisconnect, this);
         this.network.onNewPlayer.add(this._onNewPlayer, this);
-        this.network.onRemovePlayer.add(this._onRemovePlayer, this);
+        this.network.onSyncPlayers.add(this._onSyncPlayers, this);
+        this.network.onPlayerDisconnected.add(this._onPlayerDisconnected, this);
 
         this._createMap();
         this._createMapObjects();
@@ -50,9 +50,8 @@ class MultiplayerGameWorld extends GameWorld {
     }
 
     _onConnect(data) {
-        this.network.socket.emit('new_player', {
-            x: this.localPlayer.position.x,
-            y: this.localPlayer.position.y
+        this.network.socket.emit('client_start', {
+            name: 'player'
         });
 
         this._connectionStatusText.setText('connected');
@@ -67,24 +66,33 @@ class MultiplayerGameWorld extends GameWorld {
     }
 
     _onNewPlayer(data) {
-        console.log(`player: ${data.id} connected`);
+        console.log(`player: ${data.player.id} connected`);
 
         this._connectionStatusText.setText('player joined');
         window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
 
-        var newPlayer = new Player(this._level.game, data.x, data.y, data.id);
-        newPlayer.setup(this);
+        var newPlayer = new Player(this._level.game, 0, 0, data.player.id);
+        newPlayer.setup(this._level);
         this.remotePlayers.add(newPlayer);
     }
 
-    _onRemovePlayer(data) {
-        var removePlayer = util.searchObjArray(this.remotePlayers.children, 'id', data.id);
+    _onSyncPlayers(data) {
+        for (var player of data.players) {
+            console.log(player);
+        }
+    }
+
+    _onPlayerDisconnected(data) {
+        var removePlayer = _.find(this.remotePlayers.children, (player) => {
+            return (player.id === data.player.id);
+        });
 
         if (!removePlayer) {
-            console.log(`Player: ${data.id} not found`);
+            console.log(`Player: ${data.player.id} not found`);
             return;
         }
 
+        console.log(`Player: ${data.player.id} disconnected`);
         removePlayer.destroy();
     }
 }

@@ -17,8 +17,6 @@ var start = function() {
 
     // begin socket communication on the express http server
     var io = socketio.listen(expressServer.server);
-    io.set('log level', 0);
-
     var game = new Game(io);
 };
 
