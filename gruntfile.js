@@ -12,6 +12,24 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
+        clean: {
+            dist: ['dist/**']
+        },
+
+        copy: {
+            main: {
+                files: [
+                    { expand: true, src: ['index.html'], dest: 'dist/' },
+                    { expand: true, src: ['res/**'], dest: 'dist/' },
+                    { expand: true, flatten: true,  src: [
+                                            './node_modules/phaser/build/phaser.js',
+                                            './node_modules/phaser/build/phaser.min.js',
+                                            './node_modules/phaser/build/phaser.map',
+                                            './node_modules/phaser-debug/dist/phaser-debug.js'], dest: 'dist/js/vendor/' }
+                ]
+            }
+        },
+
         jshint: {
             options: {
                 jshintrc: true,
@@ -50,18 +68,6 @@ module.exports = function(grunt) {
             }
         },
 
-        sass: {
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: 'sass',
-                    src: ['*.scss'],
-                    dest: 'dist/css',
-                    ext: '.css'
-                }]
-            }
-        },
-
         express: {
             dev: {
                 options: {
@@ -83,23 +89,13 @@ module.exports = function(grunt) {
                     spawn: false
                 },
                 files: ['app.js', 'gruntfile.js', 'src/server/**/*.js', 'src/common/**/*.js'],
-                tasks: ['jshint', 'express', 'browserify:dist']
-            },
-            sass: {
-                options: {
-                    livereload: false
-                },
-                files: ['sass/*.scss'],
-                tasks: ['sass']
-            },
-            stylesheets: {
-                files: ['dist/css/*.css']
+                tasks: ['jshint', 'express', 'browserify:dist', 'watch']
             }
         }
     });
 
     grunt.registerTask('test', ['browserify:karma', 'karma']);
     grunt.registerTask('lint', ['jshint']);
-    grunt.registerTask('build', ['lint', 'browserify:dist', 'sass']);
+    grunt.registerTask('build', ['clean', 'copy', 'lint', 'browserify:dist']);
     grunt.registerTask('default', ['build', 'express', 'watch']);
 };
