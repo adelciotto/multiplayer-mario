@@ -6,7 +6,7 @@
  * ===========================================================================
  */
 
-import Const from 'common/const';
+import Const from 'const';
 import State from 'client/states/state';
 
 class BootState extends State {

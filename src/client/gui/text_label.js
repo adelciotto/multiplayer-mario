@@ -6,7 +6,7 @@
  * ===========================================================================
  */
 
-import Const from 'common/const';
+import Const from 'const';
 
 class TextLabel extends Phaser.BitmapText {
     constructor(game, x, y, text, centerText = false, align = 'left', size = 7) {

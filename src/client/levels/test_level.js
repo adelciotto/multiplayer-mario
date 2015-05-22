@@ -7,7 +7,7 @@
  */
 
 import Level from 'client/levels/level';
-import Const from 'common/const';
+import Const from 'const';
 
 class TestLevel extends Level {
     constructor(game) {

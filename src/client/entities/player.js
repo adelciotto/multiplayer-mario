@@ -7,7 +7,7 @@
  */
 
 import Entity from 'client/entities/entity';
-import Const from 'common/const';
+import Const from 'const';
 
 let PlayerStates = {
     Idle: 'idle',

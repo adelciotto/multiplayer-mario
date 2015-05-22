@@ -1,1 +1,0 @@
-require('./performance_now');

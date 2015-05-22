@@ -55,9 +55,13 @@ module.exports = {
     /**
      * networking constants
      */
-    SocketEvents: {
-        SERVER_INIT: 'serverinit',
-        CLIENT_INIT: 'clientinit',
-        DISCONNECT: 'disconnect'
+    PeerJsEvents: {
+        OPEN: 'open',
+        CONNECTION: 'connection',
+        CLOSE: 'close',
+        DATA: 'data'
+    },
+    PeerJsMsgType: {
+        HELLO: 'hello'
     }
 };

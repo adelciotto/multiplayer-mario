@@ -6,7 +6,7 @@
  * ===========================================================================
  */
 
-import Const from 'common/const';
+import Const from 'const';
 import TextLabel from 'client/gui/text_label';
 
 class TextButton extends TextLabel {

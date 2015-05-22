@@ -6,7 +6,6 @@
  * ===========================================================================
  */
 
-
 import BootState from 'client/states/boot';
 import PreloadState from 'client/states/preload';
 import SplashState from 'client/states/splash';

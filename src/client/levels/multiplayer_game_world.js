@@ -8,7 +8,7 @@
 
 import GameWorld from 'client/levels/game_world';
 import Player from 'client/entities/player';
-import Const from 'common/const';
+import Const from 'const';
 import MsgDialog from 'client/gui/msg_dialog';
 import TextLabel from 'client/gui/text_label';
 import Network from 'client/network';
@@ -32,11 +32,12 @@ class MultiplayerGameWorld extends GameWorld {
         this._level.add.existing(this._connectionStatusText);
         this.remotePlayers = this._level.add.group();
 
-        this.network.onConnect.add(this._onConnect, this);
-        this.network.onDisconnect.add(this._onDisconnect, this);
-        this.network.onNewPlayer.add(this._onNewPlayer, this);
-        this.network.onSyncPlayers.add(this._onSyncPlayers, this);
-        this.network.onPlayerDisconnected.add(this._onPlayerDisconnected, this);
+        this.network.addListeners([
+            { event: Const.PeerJsEvents.OPEN, fn: this._onOpen, ctx: this},
+            { event: Const.PeerJsEvents.CONNECTION, fn: this._onConnection, ctx: this},
+            { event: Const.PeerJsEvents.DATA, fn: this._onData, ctx: this},
+            { event: Const.PeerJsEvents.CLOSE, fn: this._onClose, ctx: this},
+        ]);
 
         this._createMap();
         this._createMapObjects();
@@ -49,52 +50,55 @@ class MultiplayerGameWorld extends GameWorld {
         this.remotePlayers.callAll('update');
     }
 
-    _onConnect(data) {
-        this.network.socket.emit('client_start', {
-            name: 'player'
-        });
-
-        this._connectionStatusText.setText('connected');
+    _onOpen(id) {
+        this._connectionStatusText.setText(`connected, id: ${id}`);
         this._welcomeDialog = new MsgDialog(this._level, Const.MULTIPLAYER_DIALOG_TITLE,
             Const.MULTIPLAYER_DIALOG_MSG);
         window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
     }
 
-    _onDisconnect(data) {
-        // TODO: notify the user if they disconnected
-        // we can probz just return to single player here
+    _onConnection(conn) {
+
     }
 
-    _onNewPlayer(data) {
-        console.log(`player: ${data.player.id} connected`);
+    _onData(data) {
 
-        this._connectionStatusText.setText('player joined');
-        window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
-
-        var newPlayer = new Player(this._level.game, 0, 0, data.player.id);
-        newPlayer.setup(this._level);
-        this.remotePlayers.add(newPlayer);
     }
 
-    _onSyncPlayers(data) {
-        for (var player of data.players) {
-            console.log(player);
-        }
+    _onClose() {
+
     }
 
-    _onPlayerDisconnected(data) {
-        var removePlayer = _.find(this.remotePlayers.children, (player) => {
-            return (player.id === data.player.id);
-        });
+    //_onNewPlayer(data) {
+        //console.log(`player: ${data.player.id} connected`);
 
-        if (!removePlayer) {
-            console.log(`Player: ${data.player.id} not found`);
-            return;
-        }
+        //this._connectionStatusText.setText('player joined');
+        //window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
 
-        console.log(`Player: ${data.player.id} disconnected`);
-        removePlayer.destroy();
-    }
+        //var newPlayer = new Player(this._level.game, 0, 0, data.player.id);
+        //newPlayer.setup(this._level);
+        //this.remotePlayers.add(newPlayer);
+    //}
+
+    //_onSyncPlayers(data) {
+        //for (var player of data.players) {
+            //console.log(player);
+        //}
+    //}
+
+    //_onPlayerDisconnected(data) {
+        //var removePlayer = _.find(this.remotePlayers.children, (player) => {
+            //return (player.id === data.player.id);
+        //});
+
+        //if (!removePlayer) {
+            //console.log(`Player: ${data.player.id} not found`);
+            //return;
+        //}
+
+        //console.log(`Player: ${data.player.id} disconnected`);
+        //removePlayer.destroy();
+    //}
 }
 
 export default MultiplayerGameWorld;

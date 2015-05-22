@@ -25,6 +25,8 @@ module.exports = function(grunt) {
                                             './node_modules/underscore/underscore.js',
                                             './node_modules/underscore/underscore-min.js',
                                             './node_modules/underscore/underscore.-min.map',
+                                            './node_modules/peerjs/dist/peer.js',
+                                            './node_modules/peerjs/dist/peer.min.js',
                                             './node_modules/phaser/build/phaser.js',
                                             './node_modules/phaser/build/phaser.min.js',
                                             './node_modules/phaser/build/phaser.map',
@@ -38,7 +40,7 @@ module.exports = function(grunt) {
                 jshintrc: true,
                 force: true
             },
-            files: ['src/**/*.js', '!src/client/vendor/stats.js']
+            files: ['src/**/*.js']
         },
 
         browserify: {
@@ -69,14 +71,14 @@ module.exports = function(grunt) {
                 livereload: true
             },
             client: {
-                files: ['src/client/**/*.js', '!src/client/vendor/*.js'],
+                files: ['src/client/**/*.js'],
                 tasks: ['jshint', 'browserify:dist']
             },
             server: {
                 options: {
                     spawn: false
                 },
-                files: ['app.js', 'gruntfile.js', 'src/server/**/*.js', 'src/common/**/*.js'],
+                files: ['app.js', 'gruntfile.js', 'src/server/**/*.js', 'src/const.js'],
                 tasks: ['jshint', 'express', 'browserify:dist', 'watch']
             }
         }

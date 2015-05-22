@@ -9,7 +9,7 @@
 import Menu from 'client/states/menu';
 import MsgDialog from 'client/gui/msg_dialog';
 import MainOptionsDialog from 'client/gui/main_options_dialog';
-import Const from 'common/const';
+import Const from 'const';
 
 class MainMenuState extends Menu {
     constructor(game) {

@@ -6,7 +6,6 @@
  * ===========================================================================
  */
 
-require('./polyfills');
 require('babel/polyfill');
 
 import Game from 'client/game';

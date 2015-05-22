@@ -6,19 +6,36 @@
  * ===========================================================================
  */
 
-import ExpressServer from './express_server';
-import Game from './game';
-import socketio from 'socket.io';
+var ExpressPeerServer = require('peer').ExpressPeerServer;
 
-var start = function() {
-    // create the express app and http server
-    var expressServer = new ExpressServer();
+import restify from 'restify';
+import ExpressServer from './express_server';
+import Log from 'log';
+
+var expressServer;
+var log;
+
+var start = function(userPort = 8080) {
+    expressServer = new ExpressServer();
+    log = new Log('info');
     expressServer.listen();
 
-    // begin socket communication on the express http server
-    var io = socketio.listen(expressServer.server);
-    var game = new Game(io);
+    var options = {
+        debug: true,
+        allow_discovery: true
+    };
+    expressServer.app.use('/', ExpressPeerServer(expressServer.server, options));
+
+    expressServer.server.on('connection', onConnection);
+    expressServer.server.on('disconnect', onConnection);
+};
+
+var onConnection = function(id) {
+    log.info(`Client connected with id: ${id}`);
+};
+
+var onDisconnect = function(id) {
+    log.info(`Client disconnected with id: ${id}`);
 };
 
 start();
-

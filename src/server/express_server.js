@@ -14,25 +14,20 @@ import session from 'express-session';
 import errorHandler from 'errorhandler';
 import path from 'path';
 import http from 'http';
-import * as routes from './routes';
 
 class ExpressServer {
     constructor() {
         this.port = 0;
-        this.app = null;
+        this.app = express();
         this.server = null;
     }
 
-    listen(httpPort = 3000) {
+    listen(httpPort = 8080) {
         this.port = process.env.PORT || httpPort;
-
-        // create and configure express
-        this.app = express();
         this._configureExpress();
 
         // create the HTTP Server and start listening.
-        this.server = http.createServer(this.app);
-        this.server.listen(this.port, () => {
+        this.server = this.app.listen(this.port, () => {
           console.log('Express server listening on port: ' + this.port);
         });
     }
@@ -44,7 +39,9 @@ class ExpressServer {
         this.app.use(session());
         this.app.use(express.static(path.join(__dirname, '../../dist')));
 
-        this._configureRoutes();
+        this.app.get('/', (req, res) => {
+            res.sendFile(__dirname + 'index.html');
+        });
 
         // enable development mode by default to aid with debugging.
         var env = process.env.NODE_ENV || 'development';
@@ -52,11 +49,6 @@ class ExpressServer {
           this.app.use(errorHandler());
         }
     }
-
-    _configureRoutes() {
-        this.app.get('/', routes.index);
-    }
 }
 
 export default ExpressServer;
-

@@ -7,7 +7,7 @@
  */
 
 import State from 'client/states/state';
-import Const from 'common/const';
+import Const from 'const';
 import GameWorld from 'client/levels/game_world';
 import MultiplayerGameWorld from 'client/levels/multiplayer_game_world';
 

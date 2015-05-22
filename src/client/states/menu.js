@@ -7,7 +7,7 @@
  */
 
 import State from 'client/states/state';
-import Const from 'common/const';
+import Const from 'const';
 import TextButton from 'client/gui/text_button';
 
 const Step = Math.PI * 2 / 360 ;
