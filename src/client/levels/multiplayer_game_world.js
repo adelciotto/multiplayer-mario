@@ -61,12 +61,21 @@ class MultiplayerGameWorld extends GameWorld {
 
     }
 
-    _onData(data) {
-
+    _onData(type, data) {
+        switch (type) {
+            case Const.PeerJsMsgType.HELLO:
+                this._handleHello(data);
+                break;
+        }
     }
 
     _onClose() {
 
+    }
+
+    _handleHello(data) {
+        console.log(`hello from: ${data.id}`);
+        this.network.connectToPeer(data.id);
     }
 
     //_onNewPlayer(data) {

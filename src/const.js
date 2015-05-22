@@ -59,7 +59,8 @@ module.exports = {
         OPEN: 'open',
         CONNECTION: 'connection',
         CLOSE: 'close',
-        DATA: 'data'
+        DATA: 'data',
+        ERROR: 'error'
     },
     PeerJsMsgType: {
         HELLO: 'hello'
