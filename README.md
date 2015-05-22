@@ -10,7 +10,7 @@ This project is in no way endorsed by [Nintendo](http://www.nintendo.com/). Most
 plot, and other assets taken from the original Super Mario Bros are copyrights of Nintendo; I claim no ownership of
 any of the assets taken from the original game.
 
-This game is built with [Phaser](http://phaser.io) and uses [Node.js]() + [Socket.io]() for client/server communications.
+This game is built with [Phaser](http://phaser.io) and uses [Peer.js]() + [WebRTC]() for peer to peer communications.
 
 ### Running the Game
 
