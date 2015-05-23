@@ -20,6 +20,7 @@ class MultiplayerGameWorld extends GameWorld {
         this.network = null;
         this.remotePlayers = null;
 
+        this._ready = false;
         this._connectionStatusText = null;
         this._welcomeDialog = null;
     }
@@ -44,10 +45,16 @@ class MultiplayerGameWorld extends GameWorld {
     }
 
     _updateWorld() {
+        if (!this._ready) {
+            return;
+        }
+
         this._physics.arcade.collide(this.localPlayer, this.remotePlayers);
         this._physics.arcade.collide(this.remotePlayers, this._collisionLayer);
 
         this.remotePlayers.callAll('update');
+
+        this._broadcastBody();
     }
 
     _onOpen(id) {
@@ -66,34 +73,60 @@ class MultiplayerGameWorld extends GameWorld {
             case Const.PeerJsMsgType.HELLO:
                 this._handleHello(data);
                 break;
+            case Const.PeerJsMsgType.BODY:
+                this._handleBody(data);
+                break;
         }
     }
 
-    _onClose() {
+    _onClose(peer) {
+        var remotePlayer = _.find(this.remotePlayers.children, (player) => {
+            return player.id === peer;
+        });
 
+        if (!_.isUndefined(remotePlayer)) {
+            this.remotePlayers.removeChild(remotePlayer);
+        }
     }
 
     _handleHello(data) {
         console.log(`hello from: ${data.id}`);
         this.network.connectToPeer(data.id);
+        this._ready = true;
+
+        this._connectionStatusText.setText('player joined');
+        window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
+
+        var newPlayer = new Player(this._level.game, 32, 0, data.id);
+        newPlayer.setup(this._level);
+        this.remotePlayers.add(newPlayer);
     }
 
-    //_onNewPlayer(data) {
-        //console.log(`player: ${data.player.id} connected`);
+    _handleBody(data) {
+        var remotePlayer = _.find(this.remotePlayers.children, (player) => {
+            return player.id === data.id;
+        });
 
-        //this._connectionStatusText.setText('player joined');
-        //window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
+        if (!_.isUndefined(remotePlayer)) {
+            remotePlayer.facing = data.facing;
+            remotePlayer.x = data.x;
+            remotePlayer.y = data.y;
+            remotePlayer.body.acceleration.x = data.ax;
+            remotePlayer.body.velocity.x = data.vx;
+            remotePlayer.body.velocity.y = data.vy;
+        }
+    }
 
-        //var newPlayer = new Player(this._level.game, 0, 0, data.player.id);
-        //newPlayer.setup(this._level);
-        //this.remotePlayers.add(newPlayer);
-    //}
-
-    //_onSyncPlayers(data) {
-        //for (var player of data.players) {
-            //console.log(player);
-        //}
-    //}
+    _broadcastBody() {
+        this.network.broadcastToPeers(Const.PeerJsMsgType.BODY, {
+            x: this.localPlayer.x,
+            y: this.localPlayer.y,
+            vx: this.localPlayer.body.velocity.x,
+            vy: this.localPlayer.body.velocity.y,
+            ax: this.localPlayer.body.acceleration.x,
+            facing: this.localPlayer.facing
+        });
+    }
 
     //_onPlayerDisconnected(data) {
         //var removePlayer = _.find(this.remotePlayers.children, (player) => {

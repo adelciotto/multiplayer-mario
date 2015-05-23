@@ -63,6 +63,7 @@ module.exports = {
         ERROR: 'error'
     },
     PeerJsMsgType: {
-        HELLO: 'hello'
+        HELLO: 'hello',
+        BODY: 'body'
     }
 };

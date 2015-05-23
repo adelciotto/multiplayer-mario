@@ -52,7 +52,6 @@ class Player extends Entity {
     }
 
     update() {
-        this._updateAnimations();
 
         this._grounded = this.body.onFloor() || this.body.touching.down;
 
@@ -101,6 +100,8 @@ class Player extends Entity {
 
         // cap marios fall speed
         this._velocity.y = Math.min(this._velocity.y, Const.PLAYER_MAX_FALL_SPEED);
+
+        this._updateAnimations();
     }
 
     jump() {

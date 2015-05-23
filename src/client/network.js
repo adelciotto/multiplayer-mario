@@ -28,6 +28,15 @@ class Network {
         this._addEventListeners();
     }
 
+    broadcastToPeers(msgType, data) {
+        for (var peer in this.peers) {
+            this.peers[peer].send(_.extend(data, {
+                id: this.id,
+                type: msgType
+            }));
+        }
+    }
+
     sendToPeer(id, msgType, data = {}) {
         var peer = this.peers[id];
 
@@ -71,7 +80,7 @@ class Network {
         this._signals[Const.PeerJsEvents.CONNECTION].dispatch(conn);
 
         conn.on(Const.PeerJsEvents.DATA, (data) => { this._handleData(data); });
-        conn.on(Const.PeerJsEvents.CLOSE, () => { this._handleClose(); });
+        conn.on(Const.PeerJsEvents.CLOSE, () => { this._handleClose(conn.peer); });
         conn.on(Const.PeerJsEvents.ERROR, (err) => { this._handleError(err); });
     }
 
@@ -90,9 +99,9 @@ class Network {
         this._signals[Const.PeerJsEvents.DATA].dispatch(type, data);
     }
 
-    _handleClose() {
+    _handleClose(peer) {
         console.log('Connection closed');
-        this._signals[Const.PeerJsEvents.CLOSE].dispatch();
+        this._signals[Const.PeerJsEvents.CLOSE].dispatch(peer);
     }
 
     _connectToExistingPeers() {
