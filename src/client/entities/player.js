@@ -35,9 +35,6 @@ class Player extends Entity {
         this._moving = [];
 
         this._addAnimations([
-                { name: 'idle', frames: [0] },
-                { name: 'jump', frames: [5] },
-                { name: 'turn', frames: [4] },
                 { name: 'walk', frames: [1, 2, 3] }],
             8, true);
     }
@@ -51,7 +48,22 @@ class Player extends Entity {
         this.body.drag.set(Const.PLAYER_DRAG, 0);
     }
 
+    getState() {
+        return {
+            isJumping: this._jumping,
+            isGrounded: this._grounded,
+            currState: this.currentState
+        };
+    }
+
+    setState(state) {
+        this._jumping = state.isJumping;
+        this._grounded = state.isGrounded;
+        this.currentState = state.currState;
+    }
+
     update() {
+        this._updateAnimations();
 
         this._grounded = this.body.onFloor() || this.body.touching.down;
 
@@ -100,8 +112,6 @@ class Player extends Entity {
 
         // cap marios fall speed
         this._velocity.y = Math.min(this._velocity.y, Const.PLAYER_MAX_FALL_SPEED);
-
-        this._updateAnimations();
     }
 
     jump() {

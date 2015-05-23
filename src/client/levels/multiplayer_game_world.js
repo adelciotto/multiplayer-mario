@@ -109,11 +109,12 @@ class MultiplayerGameWorld extends GameWorld {
 
         if (!_.isUndefined(remotePlayer)) {
             remotePlayer.facing = data.facing;
-            remotePlayer.x = data.x;
-            remotePlayer.y = data.y;
+            remotePlayer.setState(data.state);
             remotePlayer.body.acceleration.x = data.ax;
             remotePlayer.body.velocity.x = data.vx;
             remotePlayer.body.velocity.y = data.vy;
+            remotePlayer.x = data.x;
+            remotePlayer.y = data.y;
         }
     }
 
@@ -124,7 +125,8 @@ class MultiplayerGameWorld extends GameWorld {
             vx: this.localPlayer.body.velocity.x,
             vy: this.localPlayer.body.velocity.y,
             ax: this.localPlayer.body.acceleration.x,
-            facing: this.localPlayer.facing
+            facing: this.localPlayer.facing,
+            state: this.localPlayer.getState()
         });
     }
 
