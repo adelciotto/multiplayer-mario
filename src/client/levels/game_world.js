@@ -8,6 +8,7 @@
 
 import Player from 'client/entities/player';
 import Block from 'client/entities/block';
+import ItemBlock from 'client/entities/item_block';
 import MsgDialog from 'client/gui/msg_dialog';
 
 class GameWorld {
@@ -41,12 +42,13 @@ class GameWorld {
 
     update() {
         this._physics.arcade.collide(this.localPlayer, this._collisionLayer);
-        this._physics.arcade.collide(this.localPlayer, this.blocksGroup, this._onBlockBump,
+        this._physics.arcade.collide(this.localPlayer, [this.blocksGroup, this.itemBlocksGroup], this._onBlockBump,
                                     null, this);
 
         this._updateWorld();
 
         this.blocksGroup.callAll('update');
+        this.itemBlocksGroup.callAll('update');
         this.localPlayer.update();
     }
 
@@ -70,6 +72,7 @@ class GameWorld {
         this.map.addTilesetImage('tiles', 'tiles');
 
         this._collisionLayer = this.map.createLayer('collision_layer');
+        this._collisionLayer.visible = false;
         this._staticLayer = this.map.createLayer('static_layer');
         this._collisionLayer.resizeWorld();
 
@@ -80,9 +83,12 @@ class GameWorld {
         this.blocksGroup = this._level.add.group();
         this.itemBlocksGroup = this._level.add.group();
 
-        this.map.createFromObjects('object_layer', 2, 'tilesheet', 1, true,
+        this.map.createFromObjects('block_layer', 2, 'tilesheet', 1, true,
                                     false, this.blocksGroup, Block);
+        this.map.createFromObjects('itemblock_layer', 25, 'tilesheet', 24, true,
+                                    false, this.itemBlocksGroup, ItemBlock);
         this.blocksGroup.callAll('setup', null, this._level);
+        this.itemBlocksGroup.callAll('setup', null, this._level);
     }
 
     _onBlockBump(player, block) {

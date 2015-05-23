@@ -9,7 +9,7 @@
 import Const from 'const';
 
 class Network {
-    constructor() {
+    constructor(gameWorld) {
         this.host = window.location.hostname;
         this.port = window.location.port;
         this.peer = new Peer({ host: this.host, port: this.port, path: '/'});
@@ -17,6 +17,7 @@ class Network {
         this.peers = {};
 
         this._signals = {};
+        this._gameWorld = gameWorld;
     }
 
     addListeners(listeners) {
@@ -57,7 +58,10 @@ class Network {
         }
 
         this.peers[id].on(Const.PeerJsEvents.OPEN, () => {
-            this.sendToPeer(id, Const.PeerJsMsgType.HELLO);
+            this.sendToPeer(id, Const.PeerJsMsgType.HELLO, {
+                x: this._gameWorld.localPlayer.x,
+                y: this._gameWorld.localPlayer.y
+            });
         });
     }
 

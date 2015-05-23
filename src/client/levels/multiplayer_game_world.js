@@ -26,7 +26,7 @@ class MultiplayerGameWorld extends GameWorld {
     }
 
     _createWorld() {
-        this.network = new Network();
+        this.network = new Network(this);
 
         this._connectionStatusText = new TextLabel(this._level.game, 16, 16,
             'connecting...', false, 'left', 10);
@@ -113,7 +113,7 @@ class MultiplayerGameWorld extends GameWorld {
             this._connectionStatusText.visible = false;
         }, 3000);
 
-        var newPlayer = new Player(this._level.game, 32, 0, data.id);
+        var newPlayer = new Player(this._level.game, data.x, data.y, data.id);
         newPlayer.setup(this._level);
         this.remotePlayers.add(newPlayer);
     }
@@ -130,7 +130,7 @@ class MultiplayerGameWorld extends GameWorld {
             remotePlayer.body.velocity.x = data.vx;
             remotePlayer.body.velocity.y = data.vy;
             remotePlayer.x = data.x;
-            remotePlayer.y = data.y;
+            remotePlayer.y = Math.round(data.y);
         }
     }
 
