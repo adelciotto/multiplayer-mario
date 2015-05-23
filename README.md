@@ -17,6 +17,12 @@ This game is built with [Phaser](http://phaser.io) and uses [Peer.js]() + [WebRT
 The current state of the game is highly in flux, but you can always run the current state of master by installing
 [Node.js](http://nodejs.org), cloning the repo and then running the following:
 
+If you don’t have the grunt cli installed, do so first:
+
+```shell
+npm install grunt-cli -g
+```
+
 ```shell
 cd multiplayer-mario
 npm install
@@ -31,7 +37,7 @@ Then point your browser to [http://localhost:3000](http://localhost:3000).
 
 ![title screen](http://i.giphy.com/l41lHIgd469s5Tj5C.gif)
 
-![multiplayer waiting room](http://imgur.com/SyUw4u4.png)
+![multiplayer](http://imgur.com/mbEt8jQ.png)
 
 ### License and Legal
 

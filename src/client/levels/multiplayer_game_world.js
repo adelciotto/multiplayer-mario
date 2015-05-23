@@ -51,7 +51,6 @@ class MultiplayerGameWorld extends GameWorld {
 
         this._physics.arcade.collide(this.localPlayer, this.remotePlayers);
         this._physics.arcade.collide(this.remotePlayers, this._collisionLayer);
-
         this.remotePlayers.callAll('update');
 
         this._broadcastBody();
@@ -61,7 +60,7 @@ class MultiplayerGameWorld extends GameWorld {
         this._connectionStatusText.setText(`connected, id: ${id}`);
         this._welcomeDialog = new MsgDialog(this._level, Const.MULTIPLAYER_DIALOG_TITLE,
             Const.MULTIPLAYER_DIALOG_MSG);
-        window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
+        setTimeout(() => { this._connectionStatusText.visible = false; }, 3000);
     }
 
     _onConnection(conn) {
@@ -76,6 +75,9 @@ class MultiplayerGameWorld extends GameWorld {
             case Const.PeerJsMsgType.BODY:
                 this._handleBody(data);
                 break;
+            case Const.PeerJsMsgType.BLOCK_BUMP:
+                this._handleBlockBump(data);
+                break;
         }
     }
 
@@ -89,13 +91,27 @@ class MultiplayerGameWorld extends GameWorld {
         }
     }
 
+    _onBlockBump(player, block) {
+        super._onBlockBump(player, block);
+
+        if (player.body.touching.up) {
+            this.network.broadcastToPeers(Const.PeerJsMsgType.BLOCK_BUMP, {
+                idx: this.blocksGroup.getChildIndex(block)
+            });
+        }
+    }
+
     _handleHello(data) {
         console.log(`hello from: ${data.id}`);
         this.network.connectToPeer(data.id);
         this._ready = true;
 
+        this._connectionStatusText.visible = true;
         this._connectionStatusText.setText('player joined');
-        window.setTimeout(() => { this._connectionStatusText.setText('waiting...'); }, 3000);
+        window.setTimeout(() => {
+            this._connectionStatusText.setText('');
+            this._connectionStatusText.visible = false;
+        }, 3000);
 
         var newPlayer = new Player(this._level.game, 32, 0, data.id);
         newPlayer.setup(this._level);
@@ -118,6 +134,10 @@ class MultiplayerGameWorld extends GameWorld {
         }
     }
 
+    _handleBlockBump(data) {
+        this.blocksGroup.getAt(data.idx).bump();
+    }
+
     _broadcastBody() {
         this.network.broadcastToPeers(Const.PeerJsMsgType.BODY, {
             x: this.localPlayer.x,
@@ -129,20 +149,6 @@ class MultiplayerGameWorld extends GameWorld {
             state: this.localPlayer.getState()
         });
     }
-
-    //_onPlayerDisconnected(data) {
-        //var removePlayer = _.find(this.remotePlayers.children, (player) => {
-            //return (player.id === data.player.id);
-        //});
-
-        //if (!removePlayer) {
-            //console.log(`Player: ${data.player.id} not found`);
-            //return;
-        //}
-
-        //console.log(`Player: ${data.player.id} disconnected`);
-        //removePlayer.destroy();
-    //}
 }
 
 export default MultiplayerGameWorld;

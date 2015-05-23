@@ -47,8 +47,8 @@ module.exports = {
     ].join('\n\n'),
     MULTIPLAYER_DIALOG_TITLE: 'Welcome to multiplayer mode',
     MULTIPLAYER_DIALOG_MSG: [
-        'This is the waiting room.',
-        'Feel free to jump around.'
+        'Players can join at any point.',
+        'A maximum of 4 players are allowed.'
     ].join('\n\n'),
     MULTIPLAYER_DIALOG_CLOSE: 'Ok I get it!',
 
@@ -64,6 +64,7 @@ module.exports = {
     },
     PeerJsMsgType: {
         HELLO: 'hello',
-        BODY: 'body'
+        BODY: 'body',
+        BLOCK_BUMP: 'block_bump'
     }
 };
