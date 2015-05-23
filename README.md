@@ -10,12 +10,12 @@ This project is in no way endorsed by [Nintendo](http://www.nintendo.com/). Most
 plot, and other assets taken from the original Super Mario Bros are copyrights of Nintendo; I claim no ownership of
 any of the assets taken from the original game.
 
-This game is built with [Phaser](http://phaser.io) and uses [Peer.js]() + [WebRTC]() for peer to peer communications.
+This game is built with [Phaser](http://phaser.io) and uses [Peer.js](http://peerjs.com/) + [WebRTC]() for peer to peer communications.
 
 ### Running the Game
 
 The current state of the game is highly in flux, but you can always run the current state of master by installing
-[Node.js](http://nodejs.org), cloning the repo and then running the following:
+[Node.js](http://nodejs.org)
 
 If you don’t have the grunt cli installed, do so first:
 
@@ -23,7 +23,10 @@ If you don’t have the grunt cli installed, do so first:
 npm install grunt-cli -g
 ```
 
+Then run the following:
+
 ```shell
+git clone https://github.com/adelciotto/multiplayer-mario.git
 cd multiplayer-mario
 npm install
 grunt
@@ -33,11 +36,11 @@ Then point your browser to [http://localhost:3000](http://localhost:3000).
 
 ### Preview
 
-![preview](http://imgur.com/NiIKvWc.gif)
+![preview](http://i.giphy.com/l41m64Z8UhUNtJvfq.gif)
 
 ![title screen](http://i.giphy.com/l41lHIgd469s5Tj5C.gif)
 
-![multiplayer](http://imgur.com/mbEt8jQ.png)
+![multiplayer](http://imgur.com/XPZbzTI.png)
 
 ### License and Legal
 
