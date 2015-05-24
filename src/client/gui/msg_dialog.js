@@ -10,18 +10,17 @@ import Dialog from 'client/gui/dialog';
 import TextLabel from 'client/gui/text_label';
 
 class MsgDialog extends Dialog {
-    constructor(level, titleText, msgText, closeText, onCloseCallback) {
-        super(level, titleText, closeText, onCloseCallback);
+    constructor(level, titleText, msgText, onCloseCallback, closeText, tweenTime) {
+        super(level, titleText, onCloseCallback, closeText, tweenTime);
 
-        this.msgText = msgText;
+        this._msgText = msgText;
+        this.setupText.add(this._setupMsg, this);
     }
 
-    _setupText(centerX, centerY) {
-        super._setupText(centerX, centerY);
-
+    _setupMsg(centerX, centerY) {
         var msgLabel = new TextLabel(this._level.game, centerX,
-            centerY, this.msgText, true, 'center');
-        this._dialogGroup.add(msgLabel);
+            centerY, this._msgText, true, 'center');
+        this.add(msgLabel);
     }
 }
 

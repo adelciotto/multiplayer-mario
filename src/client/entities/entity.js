@@ -23,6 +23,16 @@ class Entity extends Phaser.Sprite {
         this.body.fixedRotation = true;
     }
 
+    pause() {
+        this.animations.currentAnim.paused = true;
+        this.body.enable = false;
+    }
+
+    resume() {
+        this.animations.currentAnim.paused = false;
+        this.body.enable = true;
+    }
+
     flip() {
         var dir = (this.facing === Phaser.LEFT ? -1 : 1);
         this.scale.x = dir;

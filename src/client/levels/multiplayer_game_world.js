@@ -11,9 +11,9 @@ import Player from 'client/entities/player';
 import Const from 'const';
 import MsgDialog from 'client/gui/msg_dialog';
 import TextLabel from 'client/gui/text_label';
-import Network from 'client/network';
 import Block from 'client/entities/block';
 import ItemBlock from 'client/entities/item_block';
+import Network from 'client/network';
 
 class MultiplayerGameWorld extends GameWorld {
     constructor(level) {
@@ -24,7 +24,6 @@ class MultiplayerGameWorld extends GameWorld {
 
         this._ready = false;
         this._connectionStatusText = null;
-        this._welcomeDialog = null;
     }
 
     _createWorld() {
@@ -34,6 +33,7 @@ class MultiplayerGameWorld extends GameWorld {
             'connecting...', false, 'left', 10);
         this._level.add.existing(this._connectionStatusText);
         this.remotePlayers = this._level.add.group();
+        this._entitiesGroup.add(this.remotePlayers);
 
         this.network.addListeners([
             { event: Const.PeerJsEvents.OPEN, fn: this._onOpen, ctx: this},
@@ -60,8 +60,8 @@ class MultiplayerGameWorld extends GameWorld {
 
     _onOpen(id) {
         this._connectionStatusText.setText(`connected, id: ${id}`);
-        this._welcomeDialog = new MsgDialog(this._level, Const.MULTIPLAYER_DIALOG_TITLE,
-            Const.MULTIPLAYER_DIALOG_MSG);
+        var welcome = new MsgDialog(this._level, Const.MULTIPLAYER_DIALOG_TITLE, Const.MULTIPLAYER_DIALOG_MSG);
+        welcome.show();
         setTimeout(() => { this._connectionStatusText.visible = false; }, 3000);
     }
 

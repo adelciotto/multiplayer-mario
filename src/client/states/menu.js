@@ -10,7 +10,7 @@ import State from 'client/states/state';
 import Const from 'const';
 import TextButton from 'client/gui/text_button';
 
-const Step = Math.PI * 2 / 360 ;
+const Step = Math.PI * 2 / 360;
 
 class MenuState extends State {
     constructor(game) {
@@ -39,12 +39,13 @@ class MenuState extends State {
         this._counter += Step ;
     }
 
-    _setInputEnabled(enabled) {
+    setInputEnabled(enabled) {
+        this._menuItemsGroup.setAll('tint', 0x000000);
         this._menuItemsGroup.setAll('inputEnabled', enabled);
     }
 
     _addMenuItems(items) {
-        var yPos = this.game.height / 1.75;
+        var yPos = this.game.height / 1.8;
 
         for (var i = 0, l = items.length; i < l; i++) {
             let item = items[i];

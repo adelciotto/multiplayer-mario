@@ -45,6 +45,7 @@ module.exports = {
         'taken from the original Super Mario',
         'Bros are copyrights of Nintendo.'
     ].join('\n\n'),
+    MULTIPLAYER_MODE_SELECT_TITLE: 'Join or Host a game',
     MULTIPLAYER_DIALOG_TITLE: 'Welcome to multiplayer mode',
     MULTIPLAYER_DIALOG_MSG: [
         'Players can join at any point.',

@@ -10,6 +10,7 @@ import State from 'client/states/state';
 import Const from 'const';
 import GameWorld from 'client/levels/game_world';
 import MultiplayerGameWorld from 'client/levels/multiplayer_game_world';
+import OptionsDialog from 'client/gui/options_dialog';
 
 class Level extends State {
     constructor(game, gravity) {
@@ -27,7 +28,8 @@ class Level extends State {
                 right: Phaser.Keyboard.RIGHT,
 
                 jump: Phaser.Keyboard.C,
-                sprint: Phaser.Keyboard.X
+                sprint: Phaser.Keyboard.X,
+                pause: Phaser.Keyboard.ENTER
             }
         };
     }
@@ -51,6 +53,8 @@ class Level extends State {
 
         this.gameWorld.create();
         this._localPlayer = this.gameWorld.localPlayer;
+        this.game.isPaused = false;
+        this._optionsDialog = new OptionsDialog(this, 'Paused', () => { this.resume(); }, 'Resume');
     }
 
     shutdown() {
@@ -61,6 +65,21 @@ class Level extends State {
 
     update() {
         this.gameWorld.update();
+    }
+
+    pause() {
+        if (!this.game.isPaused) {
+            this._optionsDialog.show();
+            this.gameWorld.pause();
+            this.game.isPaused = true;
+        }
+    }
+
+    resume() {
+        if (this.game.isPaused) {
+            this.gameWorld.resume();
+            this.game.isPaused = false;
+        }
     }
 
     onKeyboardDown(event) {
@@ -101,6 +120,11 @@ class Level extends State {
             // RIGHT
             case this._keymap.keyboard.right:
                 this._localPlayer.move(Phaser.RIGHT, 1, active);
+                break;
+
+            // RIGHT
+            case this._keymap.keyboard.pause:
+                this.pause();
                 break;
         }
     }

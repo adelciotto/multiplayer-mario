@@ -19,17 +19,20 @@ class GameWorld {
         this.itemBlocksGroup = null;
 
         this._level = level;
+        this._game = level.game;
         this._physics = level.physics;
+        this._entitiesGroup = null;
         this._collisionLayer = null;
         this._staticLayer = null;
     }
 
     create() {
-        this.localPlayer = new Player(this._level.game, 32, 0);
-        this.localPlayer.setup(this._level);
-        this._level.add.existing(this.localPlayer);
+        this._entitiesGroup = this._level.add.group();
 
         this._createWorld();
+        this.localPlayer = new Player(this._game, 32, this._game.height - 64);
+        this.localPlayer.setup(this._level);
+        this._entitiesGroup.add(this.localPlayer);
 
         this._level.camera.follow(this.localPlayer, Phaser.FOLLOW_PLATFORMER);
         this._physics.arcade.gravity.y = this._level.gravity;
@@ -52,6 +55,20 @@ class GameWorld {
         this.blocksGroup.callAll('update');
         this.itemBlocksGroup.callAll('update');
         this.localPlayer.update();
+    }
+
+    pause() {
+        if (!this._game.inMultiplayerMode) {
+            this._game.input.keyboard.enabled = false;
+            this._entitiesGroup.callAll('pause');
+        }
+    }
+
+    resume() {
+        if (!this._game.inMultiplayerMode) {
+            this._game.input.keyboard.enabled = true;
+            this._entitiesGroup.callAll('resume');
+        }
     }
 
     /**

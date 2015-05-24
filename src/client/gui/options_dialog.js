@@ -1,52 +1,46 @@
 /*
  * ===========================================================================
- * File: options_dialog.js
+ * File:options_dialog.js
  * Author: Anthony Del Ciotto
  * Desc: TODO
  * ===========================================================================
  */
 
-import Dialog from 'client/gui/dialog';
+import ListDialog from 'client/gui/list_dialog';
 import TextLabel from 'client/gui/text_label';
-import TextButton from 'client/gui/text_button';
+import TextButton from 'client/gui/text_label';
 
-class OptionsDialog extends Dialog {
-    constructor(level, titleText, closeText, onCloseCallback, options = []) {
-        super(level, titleText, closeText, onCloseCallback);
+class OptionsDialog extends ListDialog {
+    constructor(level, titleText, onCloseCallback, closeText, tweenTime) {
+        super(level, titleText, onCloseCallback, closeText, tweenTime);
+
+        this.addItem([
+            { label: 'fullscreen:', button: 'off',
+                callbackFn: this._onFullscreenToggle, callbackCtx: this},
+            { label: 'audio:', button: 'on',
+                callbackFn: this._onAudioToggle, callbackCtx: this}
+        ]);
     }
 
-    /**
-     * to be overidden in sub class
-     */
-    setupOptions(options) {
-        this._options = options;
-    }
+    _onFullscreenToggle(button) {
+        var scale = this.callbackCtx._level.scale;
 
-    _setupText(centerX, centerY) {
-        super._setupText(centerX, centerY);
-
-        var yPos = centerY * 0.76;
-        var xPos = centerX;
-        var center = false;
-        for (var i = 0, l = this._options.length; i < l; i++) {
-            let option = this._options[i];
-
-            if (option.label) {
-                var optionLabel = new TextLabel(this._level.game, centerX/2, yPos, option.label, true);
-                xPos = centerX * 1.5;
-                this._dialogGroup.add(optionLabel);
-                center = false;
-            } else {
-                xPos = centerX;
-                center = true;
-            }
-
-            let optionButton = new TextButton(this._level.game, xPos, yPos, option.button,
-                { fn: () => { option.callbackFn(optionButton); }, ctx: option.callbackCtx }, center);
-            this._dialogGroup.add(optionButton);
-
-            yPos += 16;
+        if (scale.isFullScreen) {
+            scale.stopFullScreen();
+            button.setText('off');
+        } else {
+            scale.startFullScreen(false);
+            scale.setScreenSize();
+            button.setText('on');
         }
+    }
+
+    _onAudioToggle(button) {
+        var isMuted = this.callbackCtx._level.sound.mute;
+        var status = (isMuted ? 'on' : 'off');
+
+        this.callbackCtx._level.sound.mute = !this.callbackCtx._level.sound.mute;
+        button.setText(status);
     }
 }
 

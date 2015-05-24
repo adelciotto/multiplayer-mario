@@ -8,7 +8,8 @@
 
 import Menu from 'client/states/menu';
 import MsgDialog from 'client/gui/msg_dialog';
-import MainOptionsDialog from 'client/gui/main_options_dialog';
+import OptionsDialog from 'client/gui/options_dialog';
+import ListDialog from 'client/gui/list_dialog';
 import Const from 'const';
 
 class MainMenuState extends Menu {
@@ -21,19 +22,21 @@ class MainMenuState extends Menu {
     create() {
         super.create();
 
-        var msgDialog = new MsgDialog(this, Const.MAINMENU_DIALOG_TITLE,
-            Const.MAINMENU_DIALOG_MSG, 'close', () => {
-                this._addMenuItems([
-                    { text: 'Single-Player', onInputDown: this._singlePlayerSelected  },
-                    { text: 'Multi-Player', onInputDown: this._multiPlayerSelected  },
-                    { text: 'Options', onInputDown: this._optionsSelected  },
-                    { text: 'Credits', onInputDown: this._creditsSelected  }
-                ]);
-            }
-        );
+        var msgDialog = new MsgDialog(this, Const.MAINMENU_DIALOG_TITLE, Const.MAINMENU_DIALOG_MSG);
+        msgDialog.show();
+        this._optionsDialog = new OptionsDialog(this, 'Options');
+
+        this._addMenuItems([
+            { text: 'Single-Player', onInputDown: this._singlePlayerSelected  },
+            { text: 'Multi-Player', onInputDown: this._multiPlayerSelected  },
+            { text: 'Options', onInputDown: this._optionsSelected  },
+            { text: 'Credits', onInputDown: this._creditsSelected  }
+        ]);
     }
 
     _singlePlayerSelected() {
+        this.game.inMultiplayerMode = false;
+        this.game.stage.disableVisibilityChange = false;
         this.state.start('play');
     }
 
@@ -44,10 +47,7 @@ class MainMenuState extends Menu {
     }
 
     _optionsSelected() {
-        this._setInputEnabled(false);
-        var optionsDialog = new MainOptionsDialog(this, 'Options', 'Close', () => {
-            this._setInputEnabled(true);
-        });
+        this._optionsDialog.show();
     }
 
     _creditsSelected() {

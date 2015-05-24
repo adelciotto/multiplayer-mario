@@ -9,10 +9,11 @@
 import Const from 'const';
 
 class Network {
-    constructor(gameWorld) {
+    constructor(gameWorld, isHost) {
         this.host = window.location.hostname;
         this.port = window.location.port;
         this.peer = new Peer({ host: this.host, port: this.port, path: '/'});
+        this.isHost = isHost;
         this.id = 0;
         this.peers = {};
 
@@ -128,6 +129,7 @@ class Network {
         xmlhttp.open("GET", url, true);
         xmlhttp.send();
     }
+
 }
 
 export default Network;
