@@ -65,6 +65,7 @@ module.exports = {
     PeerJsMsgType: {
         HELLO: 'hello',
         BODY: 'body',
-        BLOCK_BUMP: 'block_bump'
+        BLOCK_BUMP: 'block_bump',
+        ITEM_BLOCK_BUMP: 'item_block_bump'
     }
 };

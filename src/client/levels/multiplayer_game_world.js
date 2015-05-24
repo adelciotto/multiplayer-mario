@@ -12,6 +12,8 @@ import Const from 'const';
 import MsgDialog from 'client/gui/msg_dialog';
 import TextLabel from 'client/gui/text_label';
 import Network from 'client/network';
+import Block from 'client/entities/block';
+import ItemBlock from 'client/entities/item_block';
 
 class MultiplayerGameWorld extends GameWorld {
     constructor(level) {
@@ -78,6 +80,9 @@ class MultiplayerGameWorld extends GameWorld {
             case Const.PeerJsMsgType.BLOCK_BUMP:
                 this._handleBlockBump(data);
                 break;
+            case Const.PeerJsMsgType.ITEM_BLOCK_BUMP:
+                this._handleItemBlockBump(data);
+                break;
         }
     }
 
@@ -99,6 +104,28 @@ class MultiplayerGameWorld extends GameWorld {
                 idx: this.blocksGroup.getChildIndex(block)
             });
         }
+    }
+
+    _onItemBlockBump(player, itemBlock) {
+        super._onItemBlockBump(player, itemBlock);
+
+        if (player.body.touching.up) {
+            this.network.broadcastToPeers(Const.PeerJsMsgType.ITEM_BLOCK_BUMP, {
+                idx: this.itemBlocksGroup.getChildIndex(itemBlock)
+            });
+        }
+    }
+
+    _broadcastBody() {
+        this.network.broadcastToPeers(Const.PeerJsMsgType.BODY, {
+            x: this.localPlayer.x,
+            y: this.localPlayer.y,
+            vx: this.localPlayer.body.velocity.x,
+            vy: this.localPlayer.body.velocity.y,
+            ax: this.localPlayer.body.acceleration.x,
+            facing: this.localPlayer.facing,
+            state: this.localPlayer.getState()
+        });
     }
 
     _handleHello(data) {
@@ -138,16 +165,8 @@ class MultiplayerGameWorld extends GameWorld {
         this.blocksGroup.getAt(data.idx).bump();
     }
 
-    _broadcastBody() {
-        this.network.broadcastToPeers(Const.PeerJsMsgType.BODY, {
-            x: this.localPlayer.x,
-            y: this.localPlayer.y,
-            vx: this.localPlayer.body.velocity.x,
-            vy: this.localPlayer.body.velocity.y,
-            ax: this.localPlayer.body.acceleration.x,
-            facing: this.localPlayer.facing,
-            state: this.localPlayer.getState()
-        });
+    _handleItemBlockBump(data) {
+        this.itemBlocksGroup.getAt(data.idx).bump();
     }
 }
 

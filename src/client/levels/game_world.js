@@ -42,7 +42,9 @@ class GameWorld {
 
     update() {
         this._physics.arcade.collide(this.localPlayer, this._collisionLayer);
-        this._physics.arcade.collide(this.localPlayer, [this.blocksGroup, this.itemBlocksGroup], this._onBlockBump,
+        this._physics.arcade.collide(this.localPlayer, this.blocksGroup, this._onBlockBump,
+                                    null, this);
+        this._physics.arcade.collide(this.localPlayer, this.itemBlocksGroup, this._onItemBlockBump,
                                     null, this);
 
         this._updateWorld();
@@ -88,12 +90,19 @@ class GameWorld {
         this.map.createFromObjects('itemblock_layer', 25, 'tilesheet', 24, true,
                                     false, this.itemBlocksGroup, ItemBlock);
         this.blocksGroup.callAll('setup', null, this._level);
+        this.blocksGroup.callAll('body.setSize', 'body', 10, 16);
         this.itemBlocksGroup.callAll('setup', null, this._level);
     }
 
     _onBlockBump(player, block) {
         if (player.body.touching.up) {
             block.bump();
+        }
+    }
+
+    _onItemBlockBump(player, itemBlock) {
+        if (player.body.touching.up) {
+            itemBlock.bump();
         }
     }
 
