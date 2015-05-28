@@ -26,6 +26,12 @@ class MultiplayerGameWorld extends GameWorld {
         this._connectionStatusText = null;
     }
 
+    shutdown() {
+        super.shutdown();
+
+        this.remotePlayers.destroy();
+    }
+
     _createWorld() {
         this.network = new Network(this);
 

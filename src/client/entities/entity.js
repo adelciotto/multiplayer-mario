@@ -12,9 +12,6 @@ class Entity extends Phaser.Sprite {
 
         this.moveSpeed = moveSpeed;
         this.facing = Phaser.LEFT;
-
-        this._textureDirty = false;
-        this._moveDirty = false;
     }
 
     setup(level) {
