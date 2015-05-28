@@ -7,13 +7,11 @@
  */
 
 import express from 'express';
-import bodyParser from 'body-parser';
-import methodOverride from 'method-override';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
 import errorHandler from 'errorhandler';
 import path from 'path';
 import http from 'http';
+
+const AppDir = path.dirname(require.main.filename);
 
 class ExpressServer {
     constructor() {
@@ -33,14 +31,10 @@ class ExpressServer {
     }
 
     _configureExpress() {
-        this.app.use(bodyParser());
-        this.app.use(methodOverride());
-        this.app.use(cookieParser('your secret here'));
-        this.app.use(session());
-        this.app.use(express.static(path.join(__dirname, '../../dist')));
+        this.app.use(express.static(path.join(AppDir, 'dist')));
 
         this.app.get('/', (req, res) => {
-            res.sendFile(__dirname + 'index.html');
+            res.sendFile(`${AppDir}/dist/index.html`);
         });
 
         // enable development mode by default to aid with debugging.

@@ -46,14 +46,15 @@ class MultiplayerGameWorld extends GameWorld {
         this._createMapObjects();
     }
 
-    _updateWorld() {
-        if (!this._ready) {
-            return;
-        }
+    _updateCollision() {
+        super._updateCollision();
 
         this._physics.arcade.collide(this.localPlayer, this.remotePlayers);
         this._physics.arcade.collide(this.remotePlayers, this._collisionLayer);
-        this.remotePlayers.callAll('update');
+    }
+
+    _updateEntities() {
+        super._updateEntities();
 
         this._broadcastBody();
     }

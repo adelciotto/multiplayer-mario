@@ -21,18 +21,24 @@ class GameWorld {
         this._level = level;
         this._game = level.game;
         this._physics = level.physics;
+        this._mainGroup = null;
         this._entitiesGroup = null;
         this._collisionLayer = null;
         this._staticLayer = null;
     }
 
     create() {
+        this._mainGroup = this._level.add.group();
         this._entitiesGroup = this._level.add.group();
+        this._mainGroup.add(this._entitiesGroup);
 
         this._createWorld();
         this.localPlayer = new Player(this._game, 32, this._game.height - 64);
         this.localPlayer.setup(this._level);
         this._entitiesGroup.add(this.localPlayer);
+
+        // make sure the entities group is rendered on top
+        this._mainGroup.bringToTop(this._entitiesGroup);
 
         this._level.camera.follow(this.localPlayer, Phaser.FOLLOW_PLATFORMER);
         this._physics.arcade.gravity.y = this._level.gravity;
@@ -40,21 +46,12 @@ class GameWorld {
 
     shutdown() {
         this._level.camera.unfollow();
-        this._localPlayer.destroy();
+        this._mainGroup.destroy();
     }
 
     update() {
-        this._physics.arcade.collide(this.localPlayer, this._collisionLayer);
-        this._physics.arcade.collide(this.localPlayer, this.blocksGroup, this._onBlockBump,
-                                    null, this);
-        this._physics.arcade.collide(this.localPlayer, this.itemBlocksGroup, this._onItemBlockBump,
-                                    null, this);
-
-        this._updateWorld();
-
-        this.blocksGroup.callAll('update');
-        this.itemBlocksGroup.callAll('update');
-        this.localPlayer.update();
+        this._updateCollision();
+        this._updateEntities();
     }
 
     pause() {
@@ -72,8 +69,7 @@ class GameWorld {
     }
 
     /**
-     * this method is overridden completely in the multi-player
-     * game world sub class.
+     * this method is overridden in the multi-player game world sub class.
      */
     _createWorld() {
         this._createMap();
@@ -81,10 +77,42 @@ class GameWorld {
     }
 
     /**
-     * this method is overridden completely in the multi-player
-     * game world sub class.
+     * this method is overridden in the multi-player game world sub class.
      */
-    _updateWorld() { }
+    _updateCollision() {
+        this._physics.arcade.collide(this.localPlayer, this._collisionLayer);
+        this._physics.arcade.collide(this.localPlayer, this.blocksGroup, this._onBlockBump,
+                                    null, this);
+        this._physics.arcade.collide(this.localPlayer, this.itemBlocksGroup, this._onItemBlockBump,
+                                    null, this);
+    }
+
+    /**
+     * this method is overridden in the multi-player game world sub class.
+     */
+    _updateEntities() {
+        this.blocksGroup.callAll('update');
+        this.itemBlocksGroup.callAll('update');
+        this._entitiesGroup.callAll('update');
+    }
+
+    /**
+     * this method is overridden in the multi-player game world sub class.
+     */
+    _onBlockBump(player, block) {
+        if (player.body.touching.up) {
+            block.bump();
+        }
+    }
+
+    /**
+     * this method is overridden in the multi-player game world sub class.
+     */
+    _onItemBlockBump(player, itemBlock) {
+        if (player.body.touching.up) {
+            itemBlock.bump();
+        }
+    }
 
     _createMap() {
         this.map = this._level.add.tilemap(this._level.mapKey);
@@ -96,6 +124,7 @@ class GameWorld {
         this._collisionLayer.resizeWorld();
 
         this.map.setCollision(475, true, this._collisionLayer);
+        this._mainGroup.add(this._staticLayer);
     }
 
     _createMapObjects() {
@@ -109,20 +138,9 @@ class GameWorld {
         this.blocksGroup.callAll('setup', null, this._level);
         this.blocksGroup.callAll('body.setSize', 'body', 10, 16);
         this.itemBlocksGroup.callAll('setup', null, this._level);
-    }
 
-    _onBlockBump(player, block) {
-        if (player.body.touching.up) {
-            block.bump();
-        }
+        this._mainGroup.addMultiple([this.blocksGroup, this.itemBlocksGroup]);
     }
-
-    _onItemBlockBump(player, itemBlock) {
-        if (player.body.touching.up) {
-            itemBlock.bump();
-        }
-    }
-
 }
 
 export default GameWorld;

@@ -8,7 +8,6 @@
 
 var ExpressPeerServer = require('peer').ExpressPeerServer;
 
-import restify from 'restify';
 import ExpressServer from './express_server';
 import Log from 'log';
 

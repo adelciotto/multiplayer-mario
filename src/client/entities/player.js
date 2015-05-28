@@ -172,7 +172,7 @@ class Player extends Entity {
             case PlayerStates.Turning:
                 this.frame = 4;
                 break;
-            case PlayerStates.Idle:
+            case PlayerStates.Idle: // jshint ignore:line
             default:
                 this.frame = 0;
                 break;
