@@ -21,17 +21,6 @@ class Level extends State {
         this.gameWorld = null;
 
         this._localPlayer = null;
-        this._keymap = {
-            keyboard: {
-                down: Phaser.Keyboard.DOWN,
-                left: Phaser.Keyboard.LEFT,
-                right: Phaser.Keyboard.RIGHT,
-
-                jump: Phaser.Keyboard.C,
-                sprint: Phaser.Keyboard.X,
-                pause: Phaser.Keyboard.ENTER
-            }
-        };
     }
 
     preload() {
@@ -43,6 +32,17 @@ class Level extends State {
 
     create() {
         super.create();
+
+        this.inputHandler.setInputMap({
+            jump: Phaser.Keyboard.C,
+            sprint: Phaser.Keyboard.X,
+            pause: Phaser.Keyboard.ENTER
+        });
+        this.inputHandler.addListener('left', this, this._onMove);
+        this.inputHandler.addListener('right', this, this._onMove);
+        this.inputHandler.addListener('jump', this, null, this._onJump, this._onJumpReleased);
+        this.inputHandler.addListener('sprint', this, this._onSprint);
+        this.inputHandler.addListener('pause', this, this._onPause);
 
         // if we are in a multiplayer game, connect to server
         if (this.game.inMultiplayerMode) {
@@ -58,7 +58,6 @@ class Level extends State {
 
     shutdown() {
         super.shutdown();
-
         this.gameWorld.shutdown();
     }
 
@@ -81,62 +80,26 @@ class Level extends State {
         }
     }
 
-    onKeyboardDown(event) {
-        super.onKeyboardDown(event);
-
-        this._handleKeyboard(event.keyCode, true);
+    _onMove(keycode, active) {
+        var dir = (keycode === Phaser.Keyboard.LEFT ? Phaser.LEFT : Phaser.RIGHT);
+        this._localPlayer.move(dir, active);
     }
 
-    onKeyboardUp(event) {
-        super.onKeyboardUp(event);
-
-        this._handleKeyboard(event.keyCode, false);
-        this._handleKeyboardUp(event.keyCode);
+    _onJump(keycode) {
+        this._localPlayer.jump();
     }
 
-    _handleKeyboard(key, active) {
-        switch(key) {
-            // JUMP
-            case this._keymap.keyboard.jump:
-                this._localPlayer.jump();
-                break;
-
-            // SPRINT
-            case this._keymap.keyboard.sprint:
-                this._localPlayer.sprint(active);
-                break;
-
-            // DOWN i.e ducking
-            case this._keymap.keyboard.down:
-                //this._localPlayer.move(Phaser.DOWN, 1, active);
-                break;
-
-            // LEFT
-            case this._keymap.keyboard.left:
-                this._localPlayer.move(Phaser.LEFT, 1, active);
-                break;
-
-            // RIGHT
-            case this._keymap.keyboard.right:
-                this._localPlayer.move(Phaser.RIGHT, 1, active);
-                break;
-
-            // RIGHT
-            case this._keymap.keyboard.pause:
-                this.pause();
-                break;
-        }
+    _onJumpReleased(keycode) {
+        this._localPlayer.jumpReleased = true;
     }
 
-    _handleKeyboardUp(key) {
-        switch(key) {
-            // JUMP released
-            case this._keymap.keyboard.jump:
-                this._localPlayer.jumpReleased = true;
-                break;
-        }
+    _onSprint(keycode, active) {
+        this._localPlayer.sprint(active);
     }
 
+    _onPause(keycode) {
+        this.pause();
+    }
 }
 
 export default Level;

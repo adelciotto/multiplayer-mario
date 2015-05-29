@@ -138,9 +138,9 @@ class Player extends Entity {
         this._sprinting = active;
     }
 
-    move(direction, value, active) {
+    move(direction, active) {
         this._turning = false;
-        this._moving[direction] = active ? value: 0;
+        this._moving[direction] = active;
 
         // if we are currently jumping then don't change our
         // facing direction and don't play the walking animation

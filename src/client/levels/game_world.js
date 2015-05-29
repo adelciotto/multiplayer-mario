@@ -45,7 +45,6 @@ class GameWorld {
     }
 
     shutdown() {
-        this._level.camera.unfollow();
         this._mainGroup.destroy();
     }
 

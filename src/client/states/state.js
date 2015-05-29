@@ -6,30 +6,22 @@
  * ===========================================================================
  */
 
+import KeyboardHandler from 'client/input/keyboard_handler';
+
 class State extends Phaser.State {
     constructor(game) {
         super(game);
 
-        this.onInputDown = new Phaser.Signal();
-        this.onInputUp = new Phaser.Signal();
+        this.inputHandler = new KeyboardHandler();
     }
 
     create() {
-        this.input.keyboard.addCallbacks(this, this.onKeyboardDown, this.onKeyboardUp);
+        super.create();
+        this.inputHandler.create(this.input);
     }
 
     shutdown() {
-        this.onInputDown.removeAll();
-        this.onInputUp.removeAll();
         this.sound.stopAll();
-    }
-
-    onKeyboardDown(event) {
-        this.onInputDown.dispatch(event.keyCode, 1, event);
-    }
-
-    onKeyboardUp(event) {
-        this.onInputUp.dispatch(event.keyCode, 1, event);
     }
 }
 
