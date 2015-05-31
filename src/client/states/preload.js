@@ -18,13 +18,12 @@ class PreloadState extends State {
 
         this.load.spritesheet(
             'playersheet',
-            'res/img/mario_sheet.png',
-            16, 16, -1, 0, 15);
+            'res/img/mario_sheet_small.png',
+            16, 16);
         this.load.tilemap('testmap', 'res/tilemaps/testmap.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('tiles', 'res/tilemaps/tile_sheet.png');
         this.load.spritesheet('tilesheet', 'res/tilemaps/tile_sheet.png', 16, 16);
         this.load.image('html', 'res/img/html.png');
-        this.load.image('phaser', 'res/img/phaser.png');
         this.load.image('title', 'res/img/title.png');
         this.load.image('dialog', 'res/img/dialog.png');
 
