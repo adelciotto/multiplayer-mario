@@ -9,7 +9,6 @@
 import Menu from 'client/states/menu';
 import MsgDialog from 'client/gui/msg_dialog';
 import OptionsDialog from 'client/gui/options_dialog';
-import ListDialog from 'client/gui/list_dialog';
 import Const from 'const';
 
 class MainMenuState extends Menu {
@@ -23,15 +22,15 @@ class MainMenuState extends Menu {
         super.create();
 
         this._addMenuItems([
-            { text: 'Single-Player', onInputDown: this._singlePlayerSelected  },
-            { text: 'Multi-Player', onInputDown: this._multiPlayerSelected  },
-            { text: 'Options', onInputDown: this._optionsSelected  },
-            { text: 'Credits', onInputDown: this._creditsSelected  }
+            { text: 'Single-Player', fn: this._singlePlayerSelected, ctx: this  },
+            { text: 'Multi-Player', fn: this._multiPlayerSelected, ctx: this  },
+            { text: 'Options', fn: this._optionsSelected, ctx: this  },
+            { text: 'Credits', fn: this._creditsSelected, ctx: this  }
         ]);
 
-        var msgDialog = new MsgDialog(this, Const.MAINMENU_DIALOG_TITLE, Const.MAINMENU_DIALOG_MSG);
-        msgDialog.show();
-        this._optionsDialog = new OptionsDialog(this, 'Options');
+        var msgDialog = new MsgDialog(this.game, this, Const.MAINMENU_DIALOG_TITLE, 'close',
+            Const.MAINMENU_DIALOG_MSG, null, true);
+        this._optionsDialog = new OptionsDialog(this.game, this);
     }
 
     _singlePlayerSelected() {

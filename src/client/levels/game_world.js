@@ -9,7 +9,6 @@
 import Player from 'client/entities/player';
 import Block from 'client/entities/block';
 import ItemBlock from 'client/entities/item_block';
-import MsgDialog from 'client/gui/msg_dialog';
 
 class GameWorld {
     constructor(level) {

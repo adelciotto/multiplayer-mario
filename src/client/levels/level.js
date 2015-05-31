@@ -53,7 +53,7 @@ class Level extends State {
 
         this.gameWorld.create();
         this._localPlayer = this.gameWorld.localPlayer;
-        this._optionsDialog = new OptionsDialog(this, 'Paused', () => { this.resume(); }, 'Resume');
+        this._optionsDialog = new OptionsDialog(this.game, this, f => this.resume());
     }
 
     shutdown() {

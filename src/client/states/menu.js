@@ -46,14 +46,11 @@ class MenuState extends State {
 
     _addMenuItems(items) {
         var yPos = this.game.height / 1.8;
-
         for (var i = 0, l = items.length; i < l; i++) {
             let item = items[i];
 
             let textButton = new TextButton(this.game, this.world.centerX, yPos,
-                item.text, { fn: item.onInputDown, ctx: this }, true, 'center', 12);
-            this._menuItemsGroup.add(textButton);
-
+                item.text, this._menuItemsGroup, { fn: item.fn, ctx: item.ctx }, true, 'center', 12);
             yPos += textButton.height * 2;
         }
     }

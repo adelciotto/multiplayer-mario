@@ -9,8 +9,13 @@
 import Const from 'const';
 
 class TextLabel extends Phaser.BitmapText {
-    constructor(game, x, y, text, centerText = false, align = 'left', size = 7) {
+    constructor(game, x, y, text, parent = null, centerText = true,
+            align = 'center', size = 7) {
         super(game, x, y, Const.GAME_FONT, text, size);
+
+        if (parent) {
+            parent.add(this);
+        }
 
         this.align = align;
         this.fixedToCamera = true;

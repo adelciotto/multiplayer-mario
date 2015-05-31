@@ -36,7 +36,7 @@ class MultiplayerGameWorld extends GameWorld {
         this.network = new Network(this);
 
         this._connectionStatusText = new TextLabel(this._level.game, 16, 16,
-            'connecting...', false, 'left', 10);
+            'connecting...', null, false, 'left');
         this._level.add.existing(this._connectionStatusText);
         this.remotePlayers = this._level.add.group();
         this._entitiesGroup.add(this.remotePlayers);
@@ -67,8 +67,8 @@ class MultiplayerGameWorld extends GameWorld {
 
     _onOpen(id) {
         this._connectionStatusText.setText(`connected, id: ${id}`);
-        var welcome = new MsgDialog(this._level, Const.MULTIPLAYER_DIALOG_TITLE, Const.MULTIPLAYER_DIALOG_MSG);
-        welcome.show();
+        var welcome = new MsgDialog(this._level.game, this._level, Const.MULTIPLAYER_DIALOG_TITLE,
+            'close', Const.MULTIPLAYER_DIALOG_MSG, null, true);
         setTimeout(() => { this._connectionStatusText.visible = false; }, 3000);
     }
 
