@@ -21,7 +21,7 @@ class PlayState extends State {
         this.game.bumpSound = this.game.add.audio('bump');
         this.game.jumpSound = this.game.add.audio('jump');
 
-        this.state.start('testlevel');
+        this.state.start('level_1_1');
     }
 }
 

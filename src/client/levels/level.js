@@ -8,8 +8,8 @@
 
 import State from 'client/states/state';
 import Const from 'const';
-import GameWorld from 'client/levels/game_world';
-import MultiplayerGameWorld from 'client/levels/multiplayer_game_world';
+import LevelManager from 'client/levels/level_manager';
+import MultiplayerGameWorld from 'client/levels/multiplayer_level_manager';
 import OptionsDialog from 'client/gui/options_dialog';
 
 class Level extends State {
@@ -18,7 +18,7 @@ class Level extends State {
 
         this.gravity = gravity;
         this.mapKey = '';
-        this.gameWorld = null;
+        this.levelManager = null;
 
         this._localPlayer = null;
     }
@@ -46,36 +46,36 @@ class Level extends State {
 
         // if we are in a multiplayer game, connect to server
         if (this.game.inMultiplayerMode) {
-            this.gameWorld = new MultiplayerGameWorld(this);
+            this.levelManager = new MultiplayerLevelManager(this);
         } else {
-            this.gameWorld = new GameWorld(this);
+            this.levelManager = new LevelManager(this);
         }
 
-        this.gameWorld.create();
-        this._localPlayer = this.gameWorld.localPlayer;
+        this.levelManager.create();
+        this._localPlayer = this.levelManager.localPlayer;
         this._optionsDialog = new OptionsDialog(this.game, this, f => this.resume());
     }
 
     shutdown() {
         super.shutdown();
-        this.gameWorld.shutdown();
+        this.levelManager.shutdown();
     }
 
     update() {
-        this.gameWorld.update();
+        this.levelManager.update();
     }
 
     pause() {
         if (!this.game.isPaused) {
             this._optionsDialog.show();
-            this.gameWorld.pause();
+            this.levelManager.pause();
             this.game.isPaused = true;
         }
     }
 
     resume() {
         if (this.game.isPaused) {
-            this.gameWorld.resume();
+            this.levelManager.resume();
             this.game.isPaused = false;
         }
     }

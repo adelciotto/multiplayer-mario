@@ -26,7 +26,7 @@ var start = function(userPort = 8080) {
     expressServer.app.use('/', ExpressPeerServer(expressServer.server, options));
 
     expressServer.server.on('connection', onConnection);
-    expressServer.server.on('disconnect', onConnection);
+    expressServer.server.on('disconnect', onDisconnect);
 };
 
 var onConnection = function(id) {

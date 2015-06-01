@@ -1,21 +1,21 @@
 /*
  * ===========================================================================
- * File: multiplayer_game_world.js
+ * File: multiplayer_level_manager.js
  * Author: Anthony Del Ciotto
  * Desc: TODO
  * ===========================================================================
  */
 
-import GameWorld from 'client/levels/game_world';
+import LevelManager from 'client/levels/level_manager';
 import Player from 'client/entities/player';
 import Const from 'const';
 import MsgDialog from 'client/gui/msg_dialog';
 import TextLabel from 'client/gui/text_label';
 import Block from 'client/entities/block';
 import ItemBlock from 'client/entities/item_block';
-import Network from 'client/network';
+import Network from 'client/network/network';
 
-class MultiplayerGameWorld extends GameWorld {
+class MultiplayerLevelManager extends LevelManager {
     constructor(level) {
         super(level);
 
@@ -177,5 +177,5 @@ class MultiplayerGameWorld extends GameWorld {
     }
 }
 
-export default MultiplayerGameWorld;
+export default MultiplayerLevelManager;
 

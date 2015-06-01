@@ -10,12 +10,6 @@ require('babel/polyfill');
 
 import Game from 'client/game';
 
-class ClientGameManager {
-    constructor() {
-        this.game = new Game().start();
-    }
-}
-
 window.onload = () => {
-    var gameManager = new ClientGameManager();
+    var game = new Game().start();
 };

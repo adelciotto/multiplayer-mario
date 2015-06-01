@@ -11,7 +11,7 @@ import PreloadState from 'client/states/preload';
 import SplashState from 'client/states/splash';
 import MainMenuState from 'client/states/main_menu';
 import PlayState from 'client/states/play';
-import TestLevel from 'client/levels/test_level';
+import * as world_1 from 'client/levels/worlds/world_1';
 
 class Game extends Phaser.Game {
     constructor() {
@@ -57,9 +57,24 @@ class Game extends Phaser.Game {
         this.state.add('splash', SplashState, false);
         this.state.add('mainmenu', MainMenuState, false);
         this.state.add('play', PlayState, false);
-        this.state.add('testlevel', TestLevel, false);
+        this._addWorlds([world_1]);
 
         return this;
+    }
+
+    _addWorlds(worlds) {
+        for (var i = 1, l = worlds.length; i <= l; i++) {
+            this._addLevel(worlds[i-1], i);
+        }
+    }
+
+    _addLevel(levels, worldIdx) {
+        var levelIdx = 1;
+
+        _.each(levels, (level) => {
+            this.state.add(`level_${worldIdx}_${levelIdx}`, level, false);
+            levelIdx++;
+        });
     }
 }
 

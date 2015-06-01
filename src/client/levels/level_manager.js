@@ -1,6 +1,6 @@
 /*
  * ===========================================================================
- * File: game_world.js
+ * File: level_manager.js
  * Author: Anthony Del Ciotto
  * Desc: TODO
  * ===========================================================================
@@ -10,7 +10,7 @@ import Player from 'client/entities/player';
 import Block from 'client/entities/block';
 import ItemBlock from 'client/entities/item_block';
 
-class GameWorld {
+class LevelManager {
     constructor(level) {
         this.localPlayer = null;
         this.map = null;
@@ -141,6 +141,6 @@ class GameWorld {
     }
 }
 
-export default GameWorld;
+export default LevelManager;
 
 
