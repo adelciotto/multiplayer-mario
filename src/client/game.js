@@ -6,7 +6,6 @@
  * ===========================================================================
  */
 
-import BootState from 'client/states/boot';
 import PreloadState from 'client/states/preload';
 import SplashState from 'client/states/splash';
 import MainMenuState from 'client/states/main_menu';
@@ -52,8 +51,7 @@ class Game extends Phaser.Game {
     }
 
     start() {
-        this.state.add('boot', BootState, true);
-        this.state.add('preload', PreloadState, false);
+        this.state.add('preload', PreloadState, true);
         this.state.add('splash', SplashState, false);
         this.state.add('mainmenu', MainMenuState, false);
         this.state.add('play', PlayState, false);

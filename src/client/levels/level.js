@@ -9,7 +9,7 @@
 import State from 'client/states/state';
 import Const from 'const';
 import LevelManager from 'client/levels/level_manager';
-import MultiplayerGameWorld from 'client/levels/multiplayer_level_manager';
+import MultiplayerLevelManager from 'client/levels/multiplayer_level_manager';
 import OptionsDialog from 'client/gui/options_dialog';
 
 class Level extends State {
