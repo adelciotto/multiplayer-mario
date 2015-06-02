@@ -31,7 +31,7 @@ class ExpressServer {
     }
 
     _configureExpress(dirname) {
-        this.app.use(express.static(path.join(dirname, 'dist')));
+        this.app.use(express.static(path.join(dirname, '/dist')));
 
         // enable development mode by default to aid with debugging.
         var env = process.env.NODE_ENV || 'development';

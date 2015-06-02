@@ -12,7 +12,7 @@ class Network {
     constructor(gameWorld, isHost) {
         this.host = window.location.hostname;
         this.port = window.location.port;
-        this.peer = new Peer({ host: this.host, port: this.port, path: '/'});
+        this.peer = new Peer({ host: this.host, port: this.port, path: '/multi'});
         this.isHost = isHost;
         this.id = 0;
         this.peers = {};
@@ -111,7 +111,7 @@ class Network {
 
     _connectToExistingPeers() {
         var xmlhttp = new XMLHttpRequest();
-        var url = `${window.location.protocol}//${this.host}:${this.port}/peerjs/peers`;
+        var url = `${window.location.protocol}//${this.host}:${this.port}/multi/peerjs/peers`;
 
         xmlhttp.onreadystatechange = () => {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {

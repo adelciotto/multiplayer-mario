@@ -22,11 +22,11 @@ export function start(dirname, userPort = 8080) {
         debug: true,
         allow_discovery: true
     };
-    expressServer.app.use('/', ExpressPeerServer(expressServer.server, options));
+    expressServer.app.use('/multi', ExpressPeerServer(expressServer.server, options));
 
     expressServer.server.on('connection', onConnection);
     expressServer.server.on('disconnect', onDisconnect);
-};
+}
 
 var onConnection = function(id) {
     log.info(`Client connected with id: ${id}`);
