@@ -10,9 +10,9 @@ import Const from 'const';
 import TextLabel from 'client/gui/text_label';
 
 class TextButton extends TextLabel {
-    constructor(game, x, y, text, parent, callbackObj, centerText, align, size,
+    constructor(game, x, y, text, parent, fixedToCam, callbackObj, centerText, align, size,
                 overTint = Const.GOLD, outTint = 0xFFFFFF) {
-        super(game, x, y, text, parent, centerText, align, size);
+        super(game, x, y, text, parent, fixedToCam, centerText, align, size);
 
         // enable input and setup callback events
         this.inputEnabled = true;

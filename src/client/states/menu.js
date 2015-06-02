@@ -50,7 +50,7 @@ class MenuState extends State {
             let item = items[i];
 
             let textButton = new TextButton(this.game, this.world.centerX, yPos,
-                item.text, this._menuItemsGroup, { fn: item.fn, ctx: item.ctx }, true, 'center', 12);
+                item.text, this._menuItemsGroup, true, { fn: item.fn, ctx: item.ctx }, true, 'center', 12);
             yPos += textButton.height * 2;
         }
     }

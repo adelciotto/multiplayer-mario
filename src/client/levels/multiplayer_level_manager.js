@@ -13,7 +13,7 @@ import MsgDialog from 'client/gui/msg_dialog';
 import TextLabel from 'client/gui/text_label';
 import Block from 'client/entities/block';
 import ItemBlock from 'client/entities/item_block';
-import Network from 'client/network/network';
+import PeerNetwork from 'client/network/peer_network';
 
 class MultiplayerLevelManager extends LevelManager {
     constructor(level) {
@@ -33,20 +33,18 @@ class MultiplayerLevelManager extends LevelManager {
     }
 
     _createWorld() {
-        this.network = new Network(this);
+        this.network = new PeerNetwork();
 
         this._connectionStatusText = new TextLabel(this._level.game, 16, 16,
-            'connecting...', null, false, 'left');
+            'connecting...', null, true, false, 'left');
         this._level.add.existing(this._connectionStatusText);
         this.remotePlayers = this._level.add.group();
         this._entitiesGroup.add(this.remotePlayers);
 
-        this.network.addListeners([
-            { event: Const.PeerJsEvents.OPEN, fn: this._onOpen, ctx: this},
-            { event: Const.PeerJsEvents.CONNECTION, fn: this._onConnection, ctx: this},
-            { event: Const.PeerJsEvents.DATA, fn: this._onData, ctx: this},
-            { event: Const.PeerJsEvents.CLOSE, fn: this._onClose, ctx: this},
-        ]);
+        this.network.addListener(Const.PeerJsEvents.OPEN, this._onOpen, this);
+        this.network.addListener(Const.PeerJsEvents.CONNECTION, this._onConnection, this);
+        this.network.addListener(Const.PeerJsEvents.DATA, this._onData, this);
+        this.network.addListener(Const.PeerJsEvents.CLOSE, this._onClose, this);
 
         this._createMap();
         this._createMapObjects();
@@ -136,8 +134,8 @@ class MultiplayerLevelManager extends LevelManager {
     }
 
     _handleHello(data) {
-        console.log(`hello from: ${data.id}`);
-        this.network.connectToPeer(data.id);
+        console.log(`hello from: ${data.from}`);
+        this.network.connectToPeer(data.from);
         this._ready = true;
 
         this._connectionStatusText.visible = true;
@@ -147,14 +145,14 @@ class MultiplayerLevelManager extends LevelManager {
             this._connectionStatusText.visible = false;
         }, 3000);
 
-        var newPlayer = new Player(this._level.game, data.x, data.y, data.id);
+        var newPlayer = new Player(this._level.game, 0, 0, data.from);
         newPlayer.setup(this._level);
         this.remotePlayers.add(newPlayer);
     }
 
     _handleBody(data) {
         var remotePlayer = _.find(this.remotePlayers.children, (player) => {
-            return player.id === data.id;
+            return player.id === data.from;
         });
 
         if (!_.isUndefined(remotePlayer)) {

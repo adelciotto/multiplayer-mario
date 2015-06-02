@@ -11,12 +11,14 @@ import TextButton from 'client/gui/text_button';
 
 class Dialog extends Phaser.Group {
     constructor(game, parent, title, close, onClose = null, autoShow = false, tweenTime = 500) {
-        super(game, parent.stage);
+        super(game);
 
         this._parent = parent;
         this._title = title;
         this._close = close;
         this._autoShow = autoShow;
+
+        this.fixedToCamera = true;
     }
 
     setup(bodyTextItems) {
@@ -51,7 +53,6 @@ class Dialog extends Phaser.Group {
         // setup the dialog background sprite
         this.visible = false;
         this._dialogSprite = this.create(this.game.width/2, this.game.height/2, 'dialog');
-        this._dialogSprite.fixedToCamera = true;
         this._dialogSprite.anchor.set(0.5, 0.5);
         this._dialogSprite.alpha = 0.8;
 
@@ -70,7 +71,7 @@ class Dialog extends Phaser.Group {
         var titleLabel = new TextLabel(this.game, centerX, centerY - this._dialogSprite.height/2 - 7,
             this._title, this._textItemsGroup);
         var closeLabel = new TextButton(this.game, centerX, centerY + this._dialogSprite.height/2 + 7,
-            this._close, this._textItemsGroup, { fn: this.hide, ctx: this });
+            this._close, this._textItemsGroup, false, { fn: this.hide, ctx: this });
     }
 
     _initBodyText(centerX, centerY) {
@@ -87,7 +88,7 @@ class Dialog extends Phaser.Group {
             }
 
             let item = (v.type === 'label' ? new TextLabel(this.game, xPos, yPos, v.text, this._textItemsGroup) :
-                new TextButton(this.game, xPos, yPos, v.text, this._textItemsGroup, { fn: v.fn, ctx: v.ctx }));
+                new TextButton(this.game, xPos, yPos, v.text, this._textItemsGroup, false, { fn: v.fn, ctx: v.ctx }));
 
             if (v.newLine) {
                 yPos += item.height*2;
