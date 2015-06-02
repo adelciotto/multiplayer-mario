@@ -14,10 +14,9 @@ import Log from 'log';
 var expressServer;
 var log;
 
-var start = function(userPort = 8080) {
-    expressServer = new ExpressServer();
+export function start(dirname, userPort = 8080) {
     log = new Log('info');
-    expressServer.listen();
+    expressServer = new ExpressServer().listen(dirname);
 
     var options = {
         debug: true,
@@ -37,4 +36,3 @@ var onDisconnect = function(id) {
     log.info(`Client disconnected with id: ${id}`);
 };
 
-start();

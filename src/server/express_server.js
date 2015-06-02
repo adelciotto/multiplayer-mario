@@ -11,8 +11,6 @@ import errorHandler from 'errorhandler';
 import path from 'path';
 import http from 'http';
 
-const AppDir = path.dirname(require.main.filename);
-
 class ExpressServer {
     constructor() {
         this.port = 0;
@@ -20,22 +18,20 @@ class ExpressServer {
         this.server = null;
     }
 
-    listen(httpPort = 8080) {
+    listen(dirname, httpPort = 8080) {
         this.port = process.env.PORT || httpPort;
-        this._configureExpress();
+        this._configureExpress(dirname);
 
         // create the HTTP Server and start listening.
         this.server = this.app.listen(this.port, () => {
           console.log('Express server listening on port: ' + this.port);
         });
+
+        return this;
     }
 
-    _configureExpress() {
-        this.app.use(express.static(path.join(AppDir, 'dist')));
-
-        this.app.get('/', (req, res) => {
-            res.sendFile(`${AppDir}/dist/index.html`);
-        });
+    _configureExpress(dirname) {
+        this.app.use(express.static(path.join(dirname, 'dist')));
 
         // enable development mode by default to aid with debugging.
         var env = process.env.NODE_ENV || 'development';
