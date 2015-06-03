@@ -59,6 +59,7 @@ module.exports = {
     PeerJsEvents: {
         OPEN: 'open',
         CONNECTION: 'connection',
+        DISCONNECTED: 'disconnected',
         CLOSE: 'close',
         DATA: 'data',
         ERROR: 'error'

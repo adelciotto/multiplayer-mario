@@ -20,10 +20,9 @@ class PeerNetwork {
     constructor() {
         this.peer = new Peer({ host: Host, port: Port, path: Path });
 
+        this.connectedPeers = {};
         this._id = '';
-        this._connectedPeers = {};
         this._signals = {};
-
         this._addEventListeners();
     }
 
@@ -53,47 +52,46 @@ class PeerNetwork {
     }
 
     broadcastToPeers(type, data) {
-        _.each(this._connectedPeers, (v) => {
-            v.dataConnection.send(_.extend(data, {
-                from: this._id,
-                type: type
-            }));
+        _.each(this.connectedPeers, (v) => {
+            v.send(this._id, type, data);
         });
     }
 
     sendToPeer(id, type, data) {
-        if (!_.has(this._connectedPeers, id)) {
+        if (!this.hasConnectedToPeer(id)) {
             console.log(`Error: not connected to peer ${id}`);
             return;
         }
 
-        var conn = this._connectedPeers[id].dataConnection;
-        conn.send(_.extend(data, {
-            from: this._id,
-            type: type
-        }));
+        this.connectedPeers[id].send(this._id, type, data);
     }
 
     connectToPeer(id) {
         // create a new Peer and connect to them
-        if (!this.isConnectedToPeer(id)) {
+        if (!this.hasConnectedToPeer(id)) {
             console.log(`Connecting to peer: ${id}`);
             var dataConn = this.peer.connect(id);
-            this._connectedPeers[id] = new RemotePeer(id, dataConn);
+            this.connectedPeers[id] = new RemotePeer(id, dataConn);
         }
 
-        this._connectedPeers[id].dataConnection.on(Const.PeerJsEvents.OPEN, f => {
+        this.connectedPeers[id].on(Const.PeerJsEvents.OPEN, f => {
             this.sendToPeer(id, Const.PeerJsMsgType.HELLO, { });
         });
     }
 
-    isConnectedToPeer(id) {
-        if (_.has(this._connectedPeers, id)) {
+    hasConnectedToPeer(id) {
+        if (_.has(this.connectedPeers, id)) {
             console.log(`Already connected to peer: ${id}`);
             return true;
         }
 
         return false;
+    }
+
+    destroy() {
+        if (!!this.peer && !this.peer.destroyed) {
+            this.peer.destroy();
+        }
     }
 
     _addEventListeners() {

@@ -24,6 +24,9 @@ class MultiplayerLevelManager extends LevelManager {
 
         this._ready = false;
         this._connectionStatusText = null;
+
+        // make sure to cleanup peerjs when window is closed
+        window.onunload = window.onbeforeunload = f => this._disconnect();
     }
 
     shutdown() {
@@ -172,6 +175,10 @@ class MultiplayerLevelManager extends LevelManager {
 
     _handleItemBlockBump(data) {
         this.itemBlocksGroup.getAt(data.idx).bump();
+    }
+
+    _disconnect() {
+        this.network.destroy();
     }
 }
 

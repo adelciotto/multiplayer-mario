@@ -27,14 +27,18 @@ export function handleConnection(conn) {
 
     // begin listening to events for this connected peer
     conn.on(Const.PeerJsEvents.DATA, (data) => handleData.call(this, data));
-    conn.on(Const.PeerJsEvents.CLOSE, () => handleClose.call(this));
-    conn.on(Const.PeerJsEvents.ERROR, (err) => handleError.call(this, data));
+    conn.on(Const.PeerJsEvents.CLOSE, () => handleClose.call(this, conn.peer));
+    conn.on(Const.PeerJsEvents.ERROR, (err) => handleError.call(this, err));
 
     // call the user listener
     this._signals[Const.PeerJsEvents.CONNECTION].dispatch(conn.peer);
 }
 
-export function handleData(data) {
+export function handleError(err) {
+    console.log(err);
+}
+
+function handleData(data) {
     var type = data.type;
 
     if (!_.isUndefined(type)) {
@@ -44,11 +48,10 @@ export function handleData(data) {
     }
 }
 
-export function handleClose(peer) {
-    this._signals[Const.PeerJsEvents.CLOSE].dispatch(peer);
-}
-
-export function handleError(err) {
-    console.log(err);
+function handleClose(peer) {
+    if (this.hasConnectedToPeer(peer)) {
+        delete this.connectedPeers[peer];
+        this._signals[Const.PeerJsEvents.CLOSE].dispatch(peer);
+    }
 }
 
