@@ -38,9 +38,9 @@ Then point your browser to [http://localhost:3000](http://localhost:3000).
 
 ![preview](http://imgur.com/gkeQuZG.gif)
 
-![title screen](http://imgur.com/v2fd8Ni.gif)
+![title screen](http://imgur.com/dVTh8rW.png)
 
-![multiplayer](http://imgur.com/e5Jheqc.png)
+![multiplayer](http://imgur.com/pRMtQWN.png)
 
 ### License and Legal
 

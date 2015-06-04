@@ -27,7 +27,7 @@ module.exports = {
     /**
      * asset constants
      */
-    GAME_FONT: 'carrier_command',
+    GAME_FONT: 'plumber_bros',
 
     /**
      * size constants
