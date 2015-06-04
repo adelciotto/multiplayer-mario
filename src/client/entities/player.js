@@ -46,6 +46,7 @@ class Player extends Entity {
         this._accel = this.body.acceleration;
         this.body.maxVelocity.set(this.maxSpeed, this.maxSpeed * 10);
         this.body.drag.set(Const.PLAYER_DRAG, 0);
+        this.body.setSize(this.body.width - 2, this.body.height);
     }
 
     getStateSnapshot() {
@@ -92,7 +93,7 @@ class Player extends Entity {
 
         // if we are on the ground and moving at all set
         // the player state to walking. we need this as if we land from
-        // a jump still moving horizontally it needs to look like mario
+        // a jump still moving horizontally it needs to look like player
         // is running to a halt.
         if (Math.abs(this._velocity.x) > 0 && this._grounded && !this._turning) {
             this.currentState = PlayerStates.Walking;
@@ -112,7 +113,7 @@ class Player extends Entity {
             }
         }
 
-        // cap marios fall speed
+        // cap player fall speed
         this._velocity.y = Math.min(this._velocity.y, Const.PLAYER_MAX_FALL_SPEED);
     }
 
