@@ -26,6 +26,7 @@ class Player extends Entity {
         this.currentState = PlayerStates.IDLE;
         this.jumpReleased = true;
         this.facing = Phaser.RIGHT;
+        this.stateSnapshot = new Array(4);
 
         this._prevFacing = this.facing;
         this._sprinting = false;
@@ -33,7 +34,6 @@ class Player extends Entity {
         this._grounded = false;
         this._turning = false;
         this._moving = [];
-
         this._addAnimations([
                 { name: 'walk', frames: [1, 2, 3] }],
             8, true);
@@ -48,23 +48,25 @@ class Player extends Entity {
         this.body.drag.set(Const.PLAYER_DRAG, 0);
     }
 
-    getState() {
-        return {
-            isJumping: this._jumping,
-            isGrounded: this._grounded,
-            currState: this.currentState
-        };
+    getStateSnapshot() {
+        // update the snapshot values
+        this.stateSnapshot[0] = this.facing;
+        this.stateSnapshot[1] = this._jumping;
+        this.stateSnapshot[2] = this._grounded;
+        this.stateSnapshot[3] = this.currentState;
+
+        return this.stateSnapshot;
     }
 
-    setState(state) {
-        this._jumping = state.isJumping;
-        this._grounded = state.isGrounded;
-        this.currentState = state.currState;
+    setState(snapshot) {
+        this.facing = snapshot[0];
+        this._jumping = snapshot[1];
+        this._grounded = snapshot[2];
+        this.currentState = snapshot[3];
     }
 
     update() {
         this._updateAnimations();
-
         this._grounded = this.body.onFloor() || this.body.touching.down;
 
         if (this._moving[Phaser.LEFT] ) {

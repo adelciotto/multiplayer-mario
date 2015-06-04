@@ -16,6 +16,7 @@ class Dialog extends Phaser.Group {
         this._parent = parent;
         this._title = title;
         this._close = close;
+        this._onClose = onClose;
         this._autoShow = autoShow;
 
         this.fixedToCamera = true;
@@ -47,6 +48,11 @@ class Dialog extends Phaser.Group {
 
         this._textItemsGroup.visible = false;
         this._startCloseTween();
+
+        // if user defined a onclose callback, invoke it
+        if (this._onClose) {
+            this._onClose();
+        }
     }
 
     _init() {

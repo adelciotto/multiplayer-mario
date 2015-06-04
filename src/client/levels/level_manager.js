@@ -20,6 +20,7 @@ class LevelManager {
         this._level = level;
         this._game = level.game;
         this._physics = level.physics;
+        this._inputHandler = level.inputHandler;
         this._mainGroup = null;
         this._entitiesGroup = null;
         this._collisionLayer = null;
@@ -66,50 +67,9 @@ class LevelManager {
         }
     }
 
-    /**
-     * this method is overridden in the multi-player game world sub class.
-     */
     _createWorld() {
         this._createMap();
         this._createMapObjects();
-    }
-
-    /**
-     * this method is overridden in the multi-player game world sub class.
-     */
-    _updateCollision() {
-        this._physics.arcade.collide(this.localPlayer, this._collisionLayer);
-        this._physics.arcade.collide(this.localPlayer, this.blocksGroup, this._onBlockBump,
-                                    null, this);
-        this._physics.arcade.collide(this.localPlayer, this.itemBlocksGroup, this._onItemBlockBump,
-                                    null, this);
-    }
-
-    /**
-     * this method is overridden in the multi-player game world sub class.
-     */
-    _updateEntities() {
-        this.blocksGroup.callAll('update');
-        this.itemBlocksGroup.callAll('update');
-        this._entitiesGroup.callAll('update');
-    }
-
-    /**
-     * this method is overridden in the multi-player game world sub class.
-     */
-    _onBlockBump(player, block) {
-        if (player.body.touching.up) {
-            block.bump();
-        }
-    }
-
-    /**
-     * this method is overridden in the multi-player game world sub class.
-     */
-    _onItemBlockBump(player, itemBlock) {
-        if (player.body.touching.up) {
-            itemBlock.bump();
-        }
     }
 
     _createMap() {
@@ -138,6 +98,35 @@ class LevelManager {
         this.itemBlocksGroup.callAll('setup', null, this._level);
 
         this._mainGroup.addMultiple([this.blocksGroup, this.itemBlocksGroup]);
+    }
+
+    _updateCollision() {
+        this._physics.arcade.collide(this.localPlayer, this._collisionLayer);
+        this._physics.arcade.collide(this.localPlayer, this.blocksGroup, this._onBlockBump,
+                                    null, this);
+        this._physics.arcade.collide(this.localPlayer, this.itemBlocksGroup, this._onItemBlockBump,
+                                    null, this);
+    }
+
+    _updateEntities() {
+        this.blocksGroup.callAll('update');
+        this.itemBlocksGroup.callAll('update');
+        this._entitiesGroup.callAll('update');
+    }
+
+    /**
+     * level event listeners
+     */
+    _onBlockBump(player, block) {
+        if (player.body.touching.up) {
+            block.bump();
+        }
+    }
+
+    _onItemBlockBump(player, itemBlock) {
+        if (player.body.touching.up) {
+            itemBlock.bump();
+        }
     }
 }
 

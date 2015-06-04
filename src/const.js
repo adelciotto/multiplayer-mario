@@ -66,8 +66,9 @@ module.exports = {
     },
     PeerJsMsgType: {
         HELLO: 'hello',
-        BODY: 'body',
+        PLAYER_UPDATE: 'player_update',
         BLOCK_BUMP: 'block_bump',
         ITEM_BLOCK_BUMP: 'item_block_bump'
-    }
+    },
+    NETWORK_STATUS_CLEAR_TIME: 5000
 };

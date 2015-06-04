@@ -22,7 +22,6 @@ class MultiplayerLevelManager extends LevelManager {
         this.network = null;
         this.remotePlayers = null;
 
-        this._ready = false;
         this._connectionStatusText = null;
 
         // make sure to cleanup peerjs when window is closed
@@ -36,7 +35,7 @@ class MultiplayerLevelManager extends LevelManager {
     }
 
     _createWorld() {
-        this.network = new PeerNetwork();
+        this.network = new PeerNetwork(this);
 
         this._connectionStatusText = new TextLabel(this._level.game, 16, 16,
             'connecting...', null, true, false, 'left');
@@ -45,7 +44,6 @@ class MultiplayerLevelManager extends LevelManager {
         this._entitiesGroup.add(this.remotePlayers);
 
         this.network.addListener(Const.PeerJsEvents.OPEN, this._onOpen, this);
-        this.network.addListener(Const.PeerJsEvents.CONNECTION, this._onConnection, this);
         this.network.addListener(Const.PeerJsEvents.DATA, this._onData, this);
         this.network.addListener(Const.PeerJsEvents.CLOSE, this._onClose, this);
 
@@ -56,34 +54,50 @@ class MultiplayerLevelManager extends LevelManager {
     _updateCollision() {
         super._updateCollision();
 
-        this._physics.arcade.collide(this.localPlayer, this.remotePlayers);
+        //this._physics.arcade.collide(this.localPlayer, this.remotePlayers,
+                                     //null, this._onPlayerCollision, this);
         this._physics.arcade.collide(this.remotePlayers, this._collisionLayer);
     }
 
     _updateEntities() {
         super._updateEntities();
 
-        this._broadcastBody();
+        var body = this.localPlayer.body;
+        this.network.broadcastToPeers(Const.PeerJsMsgType.PLAYER_UPDATE, {
+            snapshot: this.localPlayer.getStateSnapshot(),
+            x: this.localPlayer.x,
+            y: this.localPlayer.y,
+            vx: body.velocity.x,
+            vy: body.velocity.y,
+            a: body.acceleration.x
+        });
     }
 
+    _disconnect() {
+        this.network.destroy();
+    }
+
+    /**
+     * peer js event listeners
+     */
     _onOpen(id) {
         this._connectionStatusText.setText(`connected, id: ${id}`);
         var welcome = new MsgDialog(this._level.game, this._level, Const.MULTIPLAYER_DIALOG_TITLE,
             'close', Const.MULTIPLAYER_DIALOG_MSG, null, true);
-        setTimeout(() => { this._connectionStatusText.visible = false; }, 3000);
-    }
-
-    _onConnection(conn) {
-
+        setTimeout(() => { this._connectionStatusText.visible = false; }, Const.NETWORK_STATUS_CLEAR_TIME);
     }
 
     _onData(type, data) {
+        var remotePlayer = _.find(this.remotePlayers.children, (player) => {
+            return player.id === data.from;
+        });
+
         switch (type) {
             case Const.PeerJsMsgType.HELLO:
                 this._handleHello(data);
                 break;
-            case Const.PeerJsMsgType.BODY:
-                this._handleBody(data);
+            case Const.PeerJsMsgType.PLAYER_UPDATE:
+                this._handlePlayerUpdate(remotePlayer, data);
                 break;
             case Const.PeerJsMsgType.BLOCK_BUMP:
                 this._handleBlockBump(data);
@@ -104,6 +118,9 @@ class MultiplayerLevelManager extends LevelManager {
         }
     }
 
+    /**
+     * level event listeners
+     */
     _onBlockBump(player, block) {
         super._onBlockBump(player, block);
 
@@ -124,49 +141,30 @@ class MultiplayerLevelManager extends LevelManager {
         }
     }
 
-    _broadcastBody() {
-        this.network.broadcastToPeers(Const.PeerJsMsgType.BODY, {
-            x: this.localPlayer.x,
-            y: this.localPlayer.y,
-            vx: this.localPlayer.body.velocity.x,
-            vy: this.localPlayer.body.velocity.y,
-            ax: this.localPlayer.body.acceleration.x,
-            facing: this.localPlayer.facing,
-            state: this.localPlayer.getState()
-        });
-    }
-
+    /**
+     * msg handlers
+     */
     _handleHello(data) {
         console.log(`hello from: ${data.from}`);
         this.network.connectToPeer(data.from);
-        this._ready = true;
 
         this._connectionStatusText.visible = true;
         this._connectionStatusText.setText('player joined');
-        window.setTimeout(() => {
-            this._connectionStatusText.setText('');
-            this._connectionStatusText.visible = false;
-        }, 3000);
+        window.setTimeout(f => this._connectionStatusText.visible = false, Const.NETWORK_STATUS_CLEAR_TIME);
 
-        var newPlayer = new Player(this._level.game, 0, 0, data.from);
+        var newPlayer = new Player(this._level.game, data.x, data.y, data.from);
         newPlayer.setup(this._level);
         this.remotePlayers.add(newPlayer);
     }
 
-    _handleBody(data) {
-        var remotePlayer = _.find(this.remotePlayers.children, (player) => {
-            return player.id === data.from;
-        });
+    _handlePlayerUpdate(remotePlayer, data) {
+        var body = remotePlayer.body;
 
-        if (!_.isUndefined(remotePlayer)) {
-            remotePlayer.facing = data.facing;
-            remotePlayer.setState(data.state);
-            remotePlayer.body.acceleration.x = data.ax;
-            remotePlayer.body.velocity.x = data.vx;
-            remotePlayer.body.velocity.y = data.vy;
-            remotePlayer.x = data.x;
-            remotePlayer.y = Math.round(data.y);
-        }
+        remotePlayer.setState(data.snapshot);
+        remotePlayer.x = data.x;
+        remotePlayer.y = data.y;
+        body.velocity.set(data.vx, data.vy);
+        body.acceleration.x = data.a;
     }
 
     _handleBlockBump(data) {
@@ -175,10 +173,6 @@ class MultiplayerLevelManager extends LevelManager {
 
     _handleItemBlockBump(data) {
         this.itemBlocksGroup.getAt(data.idx).bump();
-    }
-
-    _disconnect() {
-        this.network.destroy();
     }
 }
 

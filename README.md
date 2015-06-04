@@ -40,7 +40,7 @@ Then point your browser to [http://localhost:3000](http://localhost:3000).
 
 ![title screen](http://imgur.com/v2fd8Ni.gif)
 
-![multiplayer](http://imgur.com/XPZbzTI.png)
+![multiplayer](http://imgur.com/e5Jheqc.png)
 
 ### License and Legal
 

@@ -32,17 +32,7 @@ class Level extends State {
 
     create() {
         super.create();
-
-        this.inputHandler.setInputMap({
-            jump: Phaser.Keyboard.C,
-            sprint: Phaser.Keyboard.X,
-            pause: Phaser.Keyboard.ENTER
-        });
-        this.inputHandler.addListener('left', this, this._onMove);
-        this.inputHandler.addListener('right', this, this._onMove);
-        this.inputHandler.addListener('jump', this, null, this._onJump, this._onJumpReleased);
-        this.inputHandler.addListener('sprint', this, this._onSprint);
-        this.inputHandler.addListener('pause', this, this._onPause);
+        this._initInputHandler();
 
         // if we are in a multiplayer game, connect to server
         if (this.game.inMultiplayerMode) {
@@ -80,6 +70,23 @@ class Level extends State {
         }
     }
 
+    _initInputHandler() {
+        this.inputHandler.setInputMap({
+            jump: Phaser.Keyboard.C,
+            sprint: Phaser.Keyboard.X,
+            pause: Phaser.Keyboard.ENTER
+        });
+
+        this.inputHandler.addListener('left', this, this._onMove);
+        this.inputHandler.addListener('right', this, this._onMove);
+        this.inputHandler.addListener('jump', this, null, this._onJump, this._onJumpReleased);
+        this.inputHandler.addListener('sprint', this, this._onSprint);
+        this.inputHandler.addListener('pause', this, this._onPause);
+    }
+
+    /**
+     * input listeners
+     */
     _onMove(keycode, active) {
         var dir = (keycode === Phaser.Keyboard.LEFT ? Phaser.LEFT : Phaser.RIGHT);
         this._localPlayer.move(dir, active);

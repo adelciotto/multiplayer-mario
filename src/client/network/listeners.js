@@ -31,7 +31,9 @@ export function handleConnection(conn) {
     conn.on(Const.PeerJsEvents.ERROR, (err) => handleError.call(this, err));
 
     // call the user listener
-    this._signals[Const.PeerJsEvents.CONNECTION].dispatch(conn.peer);
+    if (_.has(this._signals, Const.PeerJsEvents.CONNECTION)) {
+        this._signals[Const.PeerJsEvents.CONNECTION].dispatch(conn.peer);
+    }
 }
 
 export function handleError(err) {
@@ -49,7 +51,7 @@ function handleData(data) {
 }
 
 function handleClose(peer) {
-    if (this.hasConnectedToPeer(peer)) {
+    if (_.has(this.connectedPeers, peer)) {
         delete this.connectedPeers[peer];
         this._signals[Const.PeerJsEvents.CLOSE].dispatch(peer);
     }
