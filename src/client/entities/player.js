@@ -10,28 +10,26 @@ import Entity from 'client/entities/entity';
 import Const from 'const';
 
 let PlayerStates = {
-    Idle: 'idle',
-    Walking: 'walk',
-    Jumping: 'jump',
-    Turning: 'turn',
-    Ducking: 'ducking'
+    Idle: 0,
+    Walking: 1,
+    Jumping: 2,
+    Turning: 3,
+    Ducking: 4
 };
 
 class Player extends Entity {
     constructor(game, x, y, id = 0) {
         super(game, x, y, 'playersheet', 0, Const.PLAYER_ACCEL);
-
         this.id = id;
         this.maxSpeed = Const.PLAYER_MAX_SPEED;
         this.currentState = PlayerStates.IDLE;
         this.jumpReleased = true;
         this.facing = Phaser.RIGHT;
-        this.stateSnapshot = new Array(4);
 
         this._prevFacing = this.facing;
-        this._sprinting = false;
         this._jumping = false;
         this._grounded = false;
+        this._sprinting = false;
         this._turning = false;
         this._moving = [];
         this._addAnimations([
@@ -47,23 +45,6 @@ class Player extends Entity {
         this.body.maxVelocity.set(this.maxSpeed, this.maxSpeed * 10);
         this.body.drag.set(Const.PLAYER_DRAG, 0);
         this.body.setSize(this.body.width - 2, this.body.height);
-    }
-
-    getStateSnapshot() {
-        // update the snapshot values
-        this.stateSnapshot[0] = this.facing;
-        this.stateSnapshot[1] = this._jumping;
-        this.stateSnapshot[2] = this._grounded;
-        this.stateSnapshot[3] = this.currentState;
-
-        return this.stateSnapshot;
-    }
-
-    setState(snapshot) {
-        this.facing = snapshot[0];
-        this._jumping = snapshot[1];
-        this._grounded = snapshot[2];
-        this.currentState = snapshot[3];
     }
 
     update() {

@@ -70,18 +70,17 @@ class PeerNetwork {
     connectToPeer(id) {
         // create a new Peer and connect to them
         if (!_.has(this.connectedPeers, id)) {
-            console.log(`Connecting to peer: ${id}`);
-            var dataConn = this.peer.connect(id);
-            this.connectedPeers[id] = new RemotePeer(id, dataConn);
-        } else {
-            console.log(`Already connected to peer: ${id}`);
-        }
+            let dataConn = this.peer.connect(id);
 
-        this.connectedPeers[id].on(Const.PeerJsEvents.OPEN, f => {
-            this.sendToPeer(id, Const.PeerJsMsgType.HELLO, { x: this._level.localPlayer.x,
-                y: this._level.localPlayer.y
+            console.log(`Connecting to peer: ${id}`);
+            this.connectedPeers[id] = new RemotePeer(id, dataConn);
+            this.connectedPeers[id].on(Const.PeerJsEvents.OPEN, f => {
+                this.sendToPeer(id, Const.PeerJsMsgType.HELLO, {
+                    x: this._level.localPlayer.x,
+                    y: this._level.localPlayer.y
+                });
             });
-        });
+        }
     }
 
     destroy() {

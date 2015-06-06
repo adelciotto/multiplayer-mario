@@ -64,7 +64,8 @@ class MultiplayerLevelManager extends LevelManager {
 
         var body = this.localPlayer.body;
         this.network.broadcastToPeers(Const.PeerJsMsgType.PLAYER_UPDATE, {
-            snapshot: this.localPlayer.getStateSnapshot(),
+            facing: this.localPlayer.facing,
+            state: this.localPlayer.currentState,
             x: this.localPlayer.x,
             y: this.localPlayer.y,
             vx: body.velocity.x,
@@ -160,7 +161,8 @@ class MultiplayerLevelManager extends LevelManager {
     _handlePlayerUpdate(remotePlayer, data) {
         var body = remotePlayer.body;
 
-        remotePlayer.setState(data.snapshot);
+        remotePlayer.facing = data.facing;
+        remotePlayer.currentState = data.state;
         remotePlayer.x = data.x;
         remotePlayer.y = data.y;
         body.velocity.set(data.vx, data.vy);

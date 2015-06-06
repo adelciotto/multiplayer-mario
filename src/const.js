@@ -65,10 +65,10 @@ module.exports = {
         ERROR: 'error'
     },
     PeerJsMsgType: {
-        HELLO: 'hello',
-        PLAYER_UPDATE: 'player_update',
-        BLOCK_BUMP: 'block_bump',
-        ITEM_BLOCK_BUMP: 'item_block_bump'
+        HELLO: 0,
+        PLAYER_UPDATE: 1,
+        BLOCK_BUMP: 2,
+        ITEM_BLOCK_BUMP: 3
     },
     NETWORK_STATUS_CLEAR_TIME: 5000
 };
