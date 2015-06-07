@@ -44,7 +44,6 @@ class Game extends Phaser.Game {
         ]);
 
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        this.time.advancedTiming = true;
         this.input.maxPointers = 1;
 
         this.add.plugin(Phaser.Plugin.Debug);

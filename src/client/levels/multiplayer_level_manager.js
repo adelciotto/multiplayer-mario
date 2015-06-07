@@ -49,6 +49,10 @@ class MultiplayerLevelManager extends LevelManager {
 
         this._createMap();
         this._createMapObjects();
+
+        // testing broadcasting the player state at a slower interval
+        //this._timer.loop(20, this._broadcastPlayerUpdate, this);
+        //this._timer.start();
     }
 
     _updateCollision() {
@@ -62,15 +66,18 @@ class MultiplayerLevelManager extends LevelManager {
     _updateEntities() {
         super._updateEntities();
 
+        this._broadcastPlayerUpdate();
+    }
+
+    _broadcastPlayerUpdate() {
         var body = this.localPlayer.body;
         this.network.broadcastToPeers(Const.PeerJsMsgType.PLAYER_UPDATE, {
             facing: this.localPlayer.facing,
             state: this.localPlayer.currentState,
-            x: this.localPlayer.x,
-            y: this.localPlayer.y,
-            vx: body.velocity.x,
-            vy: body.velocity.y,
-            a: body.acceleration.x
+            x: Math.round(this.localPlayer.x),
+            y: Math.round(this.localPlayer.y),
+            v: body.velocity.y.toFixed(2),
+            a: body.acceleration.x.toFixed(2)
         });
     }
 
@@ -85,7 +92,7 @@ class MultiplayerLevelManager extends LevelManager {
         this._connectionStatusText.setText(`connected, id: ${id}`);
         var welcome = new MsgDialog(this._level.game, this._level, Const.MULTIPLAYER_DIALOG_TITLE,
             'close', Const.MULTIPLAYER_DIALOG_MSG, null, true);
-        setTimeout(() => { this._connectionStatusText.visible = false; }, Const.NETWORK_STATUS_CLEAR_TIME);
+        this._timer.add(Const.NETWORK_STATUS_CLEAR_TIME, f => this._connectionStatusText.visible = false);
     }
 
     _onData(type, data) {
@@ -151,7 +158,7 @@ class MultiplayerLevelManager extends LevelManager {
 
         this._connectionStatusText.visible = true;
         this._connectionStatusText.setText('player joined');
-        window.setTimeout(f => this._connectionStatusText.visible = false, Const.NETWORK_STATUS_CLEAR_TIME);
+        this._timer.add(Const.NETWORK_STATUS_CLEAR_TIME, f => this._connectionStatusText.visible = false);
 
         var newPlayer = new Player(this._level.game, data.x, data.y, data.from);
         newPlayer.setup(this._level);
@@ -160,12 +167,11 @@ class MultiplayerLevelManager extends LevelManager {
 
     _handlePlayerUpdate(remotePlayer, data) {
         var body = remotePlayer.body;
-
         remotePlayer.facing = data.facing;
         remotePlayer.currentState = data.state;
         remotePlayer.x = data.x;
         remotePlayer.y = data.y;
-        body.velocity.set(data.vx, data.vy);
+        body.velocity.y = data.v;
         body.acceleration.x = data.a;
     }
 

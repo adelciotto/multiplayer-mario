@@ -21,6 +21,7 @@ class LevelManager {
         this._game = level.game;
         this._physics = level.physics;
         this._inputHandler = level.inputHandler;
+        this._timer = level.timer;
         this._mainGroup = null;
         this._entitiesGroup = null;
         this._collisionLayer = null;

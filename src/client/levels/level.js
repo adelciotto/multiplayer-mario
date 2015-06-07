@@ -19,6 +19,7 @@ class Level extends State {
         this.gravity = gravity;
         this.mapKey = '';
         this.levelManager = null;
+        this.timer = null;
 
         this._localPlayer = null;
     }
@@ -32,6 +33,9 @@ class Level extends State {
 
     create() {
         super.create();
+
+        this.timer = new Phaser.Timer(this.game, false);
+        this.time.add(this.timer);
         this._initInputHandler();
 
         // if we are in a multiplayer game, connect to server

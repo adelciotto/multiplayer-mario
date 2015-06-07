@@ -92,7 +92,7 @@ class PeerNetwork {
     _addEventListeners() {
         this.peer.on(Const.PeerJsEvents.OPEN, (id) => Listeners.handleOpen.call(this, id));
         this.peer.on(Const.PeerJsEvents.CONNECTION, (peer) => Listeners.handleConnection.call(this, peer));
-        this.peer.on(Const.PeerJsEvents.ERROR, (err) => Listeners.handleError(error));
+        this.peer.on(Const.PeerJsEvents.ERROR, (err) => Listeners.handleError(err));
     }
 }
 
