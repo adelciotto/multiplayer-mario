@@ -2,9 +2,8 @@
 
 This is a *incomplete* multi-player recreation of [Nintendo's Super Mario Bros.](http://en.wikipedia.org/wiki/Super_Mario_Bros).
 This is _not_ a port of the game, this is _not_ code conversion, this is _not_ the ROM running in an emulator. This is
-a complete, written from scratch, recreation of one of my favorite classic games using HTML5 technologies in the browser. While I
-will try my hardest to preserve the spirit of the game, and to come as close to the original as I can; expect slight
-differences in gameplay, mechanics, and graphics.
+an experimental demo, written from scratch, recreating of one of my favorite classic games using HTML5 technologies in the browser. While I
+will try my hardest to preserve the spirit of the game, I am simply using it as a testbed for P2P multiplayer communications, so expect many features to be missing.
 
 This project is in no way endorsed by [Nintendo](http://www.nintendo.com/). Most images, logos, characters, dialog,
 plot, and other assets taken from the original Super Mario Bros are copyrights of Nintendo; I claim no ownership of
